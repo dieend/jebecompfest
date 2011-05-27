@@ -82,12 +82,22 @@ public class GameView extends View implements Runnable,OnKeyListener{
     }
     public void updatePhysics() {
     	time +=1;
-    	bug.update(time);
+    	if (bug!= null){
+    		bug.update(time);
+    	}
     }
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		if (bird.collideWith(event.getRawX(), event.getRawY())){
 			bird.setVisible(false);
+		}
+		if (bug!= null){
+			if (bug.collideWith(event.getRawX(), event.getRawY())){
+				bug.hit();
+				if (!bug.isAlive()){
+					bug = null;
+				}
+			}
 		}
 		return false;
 	}
@@ -114,5 +124,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
 		}
 		return false;
 	}
-	
+	public LayerManager getLayerManager(){
+		return layerManager;
+	}
 }
