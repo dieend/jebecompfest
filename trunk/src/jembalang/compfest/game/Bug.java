@@ -31,8 +31,9 @@ public class Bug extends Sprite {
 			this.mv = mv;
 		}
 	}
-	public void update(){
-		move(mv.getdx(), mv.getdy());
+	public void update(float time){
+		move(mv.getdx(time), mv.getdy(time));
+		//tes
 	}
 	public void die(){
 		this.setVisible(false);

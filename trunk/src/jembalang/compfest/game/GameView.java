@@ -16,6 +16,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
 	private boolean active;
 	private int width;
 	private int height;
+	private float time;
 	Resources r;
 	private LayerManager layerManager;
 	public GameView(Context context) {
@@ -33,7 +34,9 @@ public class GameView extends View implements Runnable,OnKeyListener{
 		active = true;
 		createbird();
 		createbug();
+		time = 0;
 		((Thread)new Thread(this)).start();
+
 	}
 	private void createbug() {
 		bug = new Bug(r, R.drawable.rock, 1, 1,this);
@@ -77,7 +80,8 @@ public class GameView extends View implements Runnable,OnKeyListener{
     	}
     }
     public void updatePhysics() {
-    	bug.update();
+    	time +=1;
+    	bug.update(time);
     }
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
