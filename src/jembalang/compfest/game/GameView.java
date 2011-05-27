@@ -88,12 +88,13 @@ public class GameView extends View implements Runnable,OnKeyListener{
     }
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
+		Weapon.take().setFire(event.getRawX(), event.getRawY());
 		if (bird.collideWith(event.getRawX(), event.getRawY())){
 			bird.setVisible(false);
 		}
 		if (bug!= null){
 			if (bug.collideWith(event.getRawX(), event.getRawY())){
-				bug.hit();
+				bug.hit(Weapon.take());
 				if (!bug.isAlive()){
 					bug = null;
 				}

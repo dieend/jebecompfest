@@ -53,8 +53,8 @@ public class Bug extends Sprite {
 		this.setVisible(false);
 		host.getLayerManager().remove(this);
 	}
-	public void hit(){
-		HP-=20;
+	public void hit(Weapon weapon){
+		HP-=weapon.getDamage(rect);
 		if (HP<= 0){
 			die();
 		}
