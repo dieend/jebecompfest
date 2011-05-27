@@ -40,6 +40,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
 	}
 	private void createbug() {
 		bug = new Bug(r, R.drawable.rock, 1, 1,this);
+		bug.setPosition(50, 50);
 		bug.setFunction(MoveFunction.Factory(MoveFunction.LINEAR, 1));
 		layerManager.append(bug);
 	}
@@ -90,7 +91,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
 		}
 		return false;
 	}
-	@Override
+
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
 			bird.move(-3, 0);
