@@ -2,13 +2,12 @@ package jembalang.compfest.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
-import android.graphics.Canvas;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-import android.view.View;
 
 public class Weapon {
 	private int bullet;
@@ -16,24 +15,29 @@ public class Weapon {
 	private Rect area;
 	private int type;
 	private int buff;
-	private static Canvas canvas;
 	private static int currentWeapon;
 	private static List<Weapon> weaponList;
 	public static final int GUN = 0;
 	public static final int BUFF_NO = 0;
-	private static View host;
-	private static Paint paint = new Paint();
-	public static void setView(View h){
+	public static Vector<Bitmap[]> explosionImage;
+	private static GameThread host;
+	
+	public static void setView(GameThread h){
 		host = h;
 	}
-	public static Weapon take(){
+	public static void init() {
 		if (weaponList == null){
 			weaponList = new ArrayList<Weapon>();
+			explosionImage = new Vector<Bitmap[]>(); 
 			currentWeapon = 0;
 			Weapon.Factory(GUN);
 		}
-		Weapon p =weaponList.get(currentWeapon); 
-		return p;
+	}
+	public static Weapon take(){
+		if (weaponList == null){
+			init();
+		}
+		return weaponList.get(currentWeapon);
 	}
 	public static void nextWeapon() {
 		currentWeapon = (currentWeapon + 1) % weaponList.size();
@@ -44,15 +48,16 @@ public class Weapon {
 	private Weapon(int type){
 		this.type = type;
 		if (type == GUN){
-			area = new Rect(0,0,10,10);
+			area = new Rect(0,0,40,40);
 			base_damage = 20;
 			buff = BUFF_NO;
 			bullet = -1;
 		}
 	}
-	public static void setCanvas(Canvas c){
-		canvas = c;
+	public int buffType() {
+		return buff;
 	}
+
 	public static void Factory(int type){
 		boolean found = false;
 		for (Weapon w: weaponList){
@@ -66,26 +71,35 @@ public class Weapon {
 				Weapon wp;
 				wp = new Weapon(type);
 				weaponList.add(wp);
+				Bitmap[] explosion = new Bitmap[12];
+				Bitmap tmp = BitmapFactory.decodeResource(host.getResources(), R.drawable.explosion);
+				for (int i=0; i<12; i++){
+					explosion[i]= Bitmap.createBitmap(tmp, i*75,0 , 75, 75);
+				}
+				explosionImage.add(explosion);
+				tmp = null;
 			}
 		}
 	}
 	public void setFire(int x, int y){
-		x -= ((area.right-area.left)/2);
-		y -= ((area.bottom-area.top)/2);
-		area.offsetTo(x, y);
-//		(new Animate(x, y,area)).start();
+		if (bullet > 0 || bullet == -1){
+			if (bullet>0) bullet -= 1;
+			x -= (area.width()/2);
+			y -= (area.height()/2);
+			area.offsetTo(x, y);
+			Explosion.makeExplosion(currentWeapon, host.getLayerManager(), area);
+		}
 	}
 	public void setFire(float x, float y){
-		x -= ((int)((area.right-area.left)/2));
-		y -= ((int)((area.bottom-area.top)/2));
-		area.offsetTo((int)x, (int)y);
-//		(new Animate((int)x, (int)y,area)).start();
+		setFire((int) x, (int) y);
 	}
-	public int getDamage(Rect enemy){
+	public int getDamage(Bug enemy){
 		int damage = 0;
-		Rect k = new Rect(area);
-		k.setIntersect(area, enemy);
-		damage = (countArea(k)/countArea(area)) * base_damage;
+		Rect k = new Rect(getArea());
+		if (k.setIntersect(getArea(), enemy.getRectangle())) {
+			damage = (countArea(k)* base_damage/countArea(enemy.getRectangle()));
+			enemy.setTint(Color.RED,10);
+		}
 		return damage;
 	}
 	public static int countArea(Rect a){
@@ -94,26 +108,11 @@ public class Weapon {
 	public Rect getArea(){
 		return area;
 	}
-//	class Animate extends Thread {
-//		private int x;
-//		private int y;
-//		Rect area;
-//		Animate(int x, int y, Rect area){
-//			this.x = x;
-//			this.y = y;
-//			this.area = new Rect(area);
-//		}
-//		public void run() {
-//			if (type == GUN){	
-//				paint.setColor(Color.RED);
-//			}
-//			int draw = 1000;
-//			while (draw > 0){
-//				draw--;
-////				host.postInvalidate(area.left, area.top, area.right, area.bottom);
-//				canvas.drawRect(area, paint);
-//			}
-//			Log.d("WEAPON", "ANIMATE");
-//		}
-//	}
+	public int bulletRemaining(){
+		return bullet;
+	}
+	public void reload(int bulletNumber){
+		bullet += bulletNumber;
+	}
+
 }

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 public class Jembalang extends Activity {
-	private GameView gameView;
+	private GameThread gameView;
 	private SplashScreen splashScreen;
 	
     /** Called when the activity is first created. */
@@ -12,7 +12,7 @@ public class Jembalang extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         splashScreen = new SplashScreen();
-        gameView = new GameView(this);
+        gameView = new GameThread(this);
         setContentView(gameView);
         gameView.setFocusable(true);
         gameView.setFocusableInTouchMode(true);

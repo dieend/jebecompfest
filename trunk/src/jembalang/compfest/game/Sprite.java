@@ -2,7 +2,6 @@ package jembalang.compfest.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 public class Sprite extends Layer{
 	
@@ -13,9 +12,6 @@ public class Sprite extends Layer{
 	private int frameWidth;
 	private int[] sequence;
 	private int currentFrameIdx;
-
-	private Rect frameRect;
-	private Rect drawRect; 
 	
 	/**
 	 * Sprite constructor. column is the number of sprite frame column in the image, so is the height
@@ -41,27 +37,21 @@ public class Sprite extends Layer{
 		if (visible){
 			int crow = (sequence[currentFrameIdx]/column) * frameHeight;
 			int ccol = (sequence[currentFrameIdx]%column) * frameWidth;
-			frameRect.offsetTo(ccol, crow);
 			mat.set(matrix);
 			mat.setRotate(degree);
 			if (mirror){
 				mat.postConcat(matrixMirror);
 			}
-			b = Bitmap.createBitmap(image, ccol, crow, frameWidth, frameHeight, mat,false);
-			cb.drawBitmap(image, frameRect, drawRect, null);
-			cTintB.drawARGB(tint_a, tint_r, tint_g, tint_b);
-			if (tinted){
-				int pixel;
-				for (int i=0; i<b.getHeight(); i++){
-		        	for (int j=0; j<b.getWidth(); j++){
-		        		pixel = b.getPixel(j, i);
-		        		if (Color.alpha(pixel) != 0) {
-		        			cb.drawBitmap(tintB, j,i, null);
-		        		}
-		        	}
-		        }
+			b = Bitmap.createBitmap(image, ccol, crow, getWidth(), getHeight(), mat,true);
+			if (tinted || tintTime >0){
+				tintTime-=1;
+				if (tintTime == 0){
+					tintTime -=1;
+					tinted = false;
+					paint = null;
+				}
 			}
-			canvas.drawBitmap(b,(float)x,(float)y,null);
+			canvas.drawBitmap(b,(float)x,(float)y,paint);
 		}
 	}
 	/**
@@ -92,10 +82,6 @@ public class Sprite extends Layer{
 		for (int i = 0; i<sequence.length; i++){
 			sequence[i] = i;
 		}
-		b = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
-		cb = new Canvas(b);
-		frameRect = new Rect(0,0,frameWidth,frameHeight);
-		drawRect = new Rect(frameRect);
 	}
 	
 	/**

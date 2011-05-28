@@ -1,23 +1,27 @@
 package jembalang.compfest.game;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.graphics.Canvas;
 
 public class LayerManager {
-	ArrayList<Layer> layers;
+	ArrayList<DrawableObject> layers;
 	public LayerManager(){
-		layers = new ArrayList<Layer>();
+		layers = new ArrayList<DrawableObject>();
 	}
-	public void append(Layer layer){
+	public synchronized void append(DrawableObject layer){
 		layers.add(layer);
 	}
-	public void draw(Canvas canvas){
-		for (Layer layer:layers){
-			layer.draw(canvas);
+	public synchronized void draw(Canvas canvas){
+		Iterator<DrawableObject> it = layers.iterator();
+		DrawableObject d;
+		while(it.hasNext()){
+			d = it.next();
+			d.draw(canvas);
+			if (!d.isActive()){
+				it.remove();
+			}
 		}
-	}
-	public void remove(Layer layer){
-		layers.remove(layer);
 	}
 }

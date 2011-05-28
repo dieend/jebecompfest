@@ -1,49 +1,46 @@
 package jembalang.compfest.game;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class Layer {
+public class Layer implements DrawableObject{
 	protected boolean visible;
 	
 	protected Bitmap image;
-	protected Bitmap tintB;
 	protected boolean tinted;
 	protected int x;
 	protected int y;
-	protected int tint_a;
-	protected int tint_r;
-	protected int tint_g;
-	protected int tint_b;
+	protected int tintTime;
+	protected Paint paint;
 	protected Matrix matrix;
 	protected Matrix matrixMirror;
 	protected Matrix mat;
 	protected boolean mirror;
 	protected Rect rect;
-	protected Canvas cTintB;
 	protected int refx;
 	protected int refy;
 	protected Bitmap b;
-	protected Canvas cb;
 	protected float degree;
-	protected GameView host;
+	protected GameThread host;
+	protected boolean active;
 	public Layer(Bitmap image){
 		this.image = image;
 		init();
 	}
-	public void setHost(GameView host){
+	public void setHost(GameThread host){
 		this.host = host;
 	}
 	private void init() {
 		this.tinted = false;
 		this.mirror = false;
 		matrix = new Matrix();
+		paint = new Paint();
 		mat = new Matrix();
+		active = true;
 		float[] mirrorY = 
 		 {  -1, 0, 0, 
 		  0, 1, 0,  
@@ -51,8 +48,6 @@ public class Layer {
 		 };
 		 matrixMirror = new Matrix();
 		 matrixMirror.setValues(mirrorY);
-		tintB = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-		cTintB = new Canvas(tintB);
 		rect = new Rect(getX(), getY(), getX()+getWidth(), getY()+getHeight());
 		visible = true;
 		refx = 0;
@@ -86,20 +81,15 @@ public class Layer {
 			}
 			mat.setRotate(degree);
 			b = Bitmap.createBitmap(image, 0, 0, getWidth(), getHeight(), mat,true);
-			cTintB.drawARGB(tint_a, tint_r, tint_g, tint_b);
-			cb = new Canvas(b);
-			if (tinted){
-				int pixel;
-				for (int i=0; i<b.getHeight(); i++){
-		        	for (int j=0; j<b.getWidth(); j++){
-		        		pixel = b.getPixel(j, i);
-		        		if (Color.alpha(pixel) != 0) {
-		        			cb.drawBitmap(tintB, j,i, null);
-		        		}
-		        	}
-		        }
+			if (tinted || tintTime>0){
+			
+				if (tintTime == 0){
+					tintTime -=1;
+					tinted = false;
+					paint = null;
+				}
 			}
-			canvas.drawBitmap(b, x, y, null);
+			canvas.drawBitmap(b, x, y, paint);
 		}
 	}
 	/**
@@ -130,7 +120,8 @@ public class Layer {
 	 * @return rectangle bounding the sprite
 	 */
 	public Rect getRectangle(){
-		return new Rect(x, y, x+getWidth(), y+getHeight());
+		rect.offsetTo(x, y);
+		return rect;
 	}
 	/**
 	 * set the sprite position at (x,y)
@@ -154,19 +145,20 @@ public class Layer {
 		x += dx;
 		y += dy;
 	}
+	public void die(){
+		this.setVisible(false);
+		active = false;
+	}
 	/**
-	 * tint the sprite with color a,r,g,b
-	 * @param a
-	 * @param r
-	 * @param g
-	 * @param b
+	 * 
+	 * @param color color
+	 * @param tintTime how long the image will be tinted
 	 */
-	public void tint(int a, int r, int g, int b){
+	public void setTint(int color,int tintTime){
 		tinted = true;
-		tint_a = a;
-		tint_b = b;
-		tint_g = g;
-		tint_r = r;
+		this.tintTime = tintTime;
+		paint.setColor(color);
+		paint.setColorFilter(new LightingColorFilter(color, 1));
 	}
 	/**
 	 * untint the image
@@ -176,6 +168,9 @@ public class Layer {
 	}
 	public void setVisible(boolean v){
 		this.visible = v;
+	}
+	public boolean isActive(){
+		return active;
 	}
 	/**
 	 * set whether the image should be mirrored or not
