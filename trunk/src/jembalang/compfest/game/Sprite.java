@@ -1,8 +1,8 @@
 package jembalang.compfest.game;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 public class Sprite extends Layer{
 	
@@ -12,8 +12,10 @@ public class Sprite extends Layer{
 	private int frameHeight;
 	private int frameWidth;
 	private int[] sequence;
-	private int currentFrameIdx; 
+	private int currentFrameIdx;
 
+	private Rect frameRect;
+	private Rect drawRect; 
 	
 	/**
 	 * Sprite constructor. column is the number of sprite frame column in the image, so is the height
@@ -28,20 +30,7 @@ public class Sprite extends Layer{
 		this.row = row;
 		init();
 	}
-	/**
-	 * Sprite constructor, r is the resource from the context.getResource(), and id is the
-	 * resource id. Column is the number of frame horizontally, row the number of frame vertically
-	 * @param r
-	 * @param id
-	 * @param column
-	 * @param row
-	 */
-	public Sprite(Resources r, int id, int column, int row){
-		super(r,id);
-		this.column = column;
-		this.row = row;
-		init();
-	}
+	
 	
 	/**
 	 * draw the sprite to canvas
@@ -52,15 +41,25 @@ public class Sprite extends Layer{
 		if (visible){
 			int crow = (sequence[currentFrameIdx]/column) * frameHeight;
 			int ccol = (sequence[currentFrameIdx]%column) * frameWidth;
+			frameRect.offsetTo(ccol, crow);
 			mat.set(matrix);
 			mat.setRotate(degree);
 			if (mirror){
 				mat.postConcat(matrixMirror);
 			}
-			if (!tinted){
-				b = Bitmap.createBitmap(image, ccol, crow, frameWidth, frameHeight, mat,true);
-			} else {
-				b = Bitmap.createBitmap(tintedImage, ccol, crow, frameWidth, frameHeight, mat,true);
+			b = Bitmap.createBitmap(image, ccol, crow, frameWidth, frameHeight, mat,false);
+			cb.drawBitmap(image, frameRect, drawRect, null);
+			cTintB.drawARGB(tint_a, tint_r, tint_g, tint_b);
+			if (tinted){
+				int pixel;
+				for (int i=0; i<b.getHeight(); i++){
+		        	for (int j=0; j<b.getWidth(); j++){
+		        		pixel = b.getPixel(j, i);
+		        		if (Color.alpha(pixel) != 0) {
+		        			cb.drawBitmap(tintB, j,i, null);
+		        		}
+		        	}
+		        }
 			}
 			canvas.drawBitmap(b,(float)x,(float)y,null);
 		}
@@ -93,6 +92,10 @@ public class Sprite extends Layer{
 		for (int i = 0; i<sequence.length; i++){
 			sequence[i] = i;
 		}
+		b = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
+		cb = new Canvas(b);
+		frameRect = new Rect(0,0,frameWidth,frameHeight);
+		drawRect = new Rect(frameRect);
 	}
 	
 	/**

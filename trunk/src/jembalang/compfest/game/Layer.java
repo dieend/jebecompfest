@@ -14,27 +14,26 @@ public class Layer {
 	protected Bitmap image;
 	protected Bitmap tintB;
 	protected boolean tinted;
-	protected Bitmap tintedImage;
 	protected int x;
 	protected int y;
+	protected int tint_a;
+	protected int tint_r;
+	protected int tint_g;
+	protected int tint_b;
 	protected Matrix matrix;
 	protected Matrix matrixMirror;
 	protected Matrix mat;
 	protected boolean mirror;
 	protected Rect rect;
 	protected Canvas cTintB;
-	protected Canvas cTintedImage;
 	protected int refx;
 	protected int refy;
 	protected Bitmap b;
+	protected Canvas cb;
 	protected float degree;
 	protected GameView host;
 	public Layer(Bitmap image){
 		this.image = image;
-		init();
-	}
-	public Layer(Resources r, int id){
-		this.image = BitmapFactory.decodeResource(r, id);
 		init();
 	}
 	public void setHost(GameView host){
@@ -52,10 +51,8 @@ public class Layer {
 		 };
 		 matrixMirror = new Matrix();
 		 matrixMirror.setValues(mirrorY);
-		 tintedImage = Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
 		tintB = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
 		cTintB = new Canvas(tintB);
-		cTintedImage = new Canvas(tintedImage);
 		rect = new Rect(getX(), getY(), getX()+getWidth(), getY()+getHeight());
 		visible = true;
 		refx = 0;
@@ -88,10 +85,19 @@ public class Layer {
 				mat.postConcat(matrixMirror);
 			}
 			mat.setRotate(degree);
-			if (!tinted){
-				b = Bitmap.createBitmap(image, 0, 0, getWidth(), getHeight(), mat,true);
-			} else {
-				b = Bitmap.createBitmap(tintedImage, 0, 0, getWidth(), getHeight(), mat,true);
+			b = Bitmap.createBitmap(image, 0, 0, getWidth(), getHeight(), mat,true);
+			cTintB.drawARGB(tint_a, tint_r, tint_g, tint_b);
+			cb = new Canvas(b);
+			if (tinted){
+				int pixel;
+				for (int i=0; i<b.getHeight(); i++){
+		        	for (int j=0; j<b.getWidth(); j++){
+		        		pixel = b.getPixel(j, i);
+		        		if (Color.alpha(pixel) != 0) {
+		        			cb.drawBitmap(tintB, j,i, null);
+		        		}
+		        	}
+		        }
 			}
 			canvas.drawBitmap(b, x, y, null);
 		}
@@ -157,17 +163,10 @@ public class Layer {
 	 */
 	public void tint(int a, int r, int g, int b){
 		tinted = true;
-		cTintB.drawARGB(a, r, g, b);
-		cTintedImage.drawBitmap(image,0,0, null);
-		int pixel;
-		for (int i=0; i<image.getHeight(); i++){
-        	for (int j=0; j<image.getWidth(); j++){
-        		pixel = image.getPixel(j, i);
-        		if (Color.alpha(pixel) != 0) {
-        			cTintedImage.drawBitmap(tintB, j,i, null);
-        		}
-        	}
-        }
+		tint_a = a;
+		tint_b = b;
+		tint_g = g;
+		tint_r = r;
 	}
 	/**
 	 * untint the image

@@ -1,8 +1,14 @@
 package jembalang.compfest.game;
 
+import java.util.Vector;
+
 import android.content.Context;
-import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -16,30 +22,43 @@ public class GameView extends View implements Runnable,OnKeyListener{
 	private boolean active;
 	private int width;
 	private int height;
+	private int player_HP;
 	private float time;
-	Resources r;
 	private LayerManager layerManager;
+	private Vector<Rect> explosion;
+	private Vector<Integer> cnt;
+	private Paint paint;
+	private Bitmap bugImage;
+	private Bitmap birdImage;
 	public GameView(Context context) {
 		super(context);
-		r = context.getResources();
+		explosion = new Vector<Rect>();
+		cnt = new Vector<Integer>();
+		paint = new Paint();
+		paint.setColor(Color.RED);
         setOnKeyListener(this);
         //Calculate scale 
-        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE); 
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        bugImage = BitmapFactory.decodeResource(getResources(), R.drawable.rock);
+        birdImage = BitmapFactory.decodeResource(getResources(), R.drawable.bird);
         Display display = wm.getDefaultDisplay(); 
         width = display.getWidth(); 
         height = display.getHeight();
         layerManager = new LayerManager();
     }
 	public void start(){
+		
 		active = true;
 		createbird();
 		createbug();
+		player_HP = 100;
+		Weapon.setView(this);
 		time = 0;
 		((Thread)new Thread(this)).start();
 
 	}
 	private void createbug() {
-		bug = new Bug(r, R.drawable.rock, 1, 1,this);
+		bug = new Bug(bugImage, 1, 1,this);
 		bug.setPosition(50, 50);
 		bug.setFunction(MoveFunction.Factory(MoveFunction.LINEAR, 1));
 		layerManager.append(bug);
@@ -51,7 +70,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
 		return height;
 	}
 	private void createbird() {
-        bird = new Sprite(r, R.drawable.bird,3,1);
+        bird = new Sprite(birdImage,3,1);
         int xpos = 0;
         int ypos = 0;
         bird.setPosition(xpos, ypos);
@@ -65,9 +84,23 @@ public class GameView extends View implements Runnable,OnKeyListener{
 		super.onDraw(canvas);
 		width = getWidth();
 		height = getHeight();
+		for (int i=0; i<explosion.size(); i++){
+        	if (cnt.get(i)<3) {
+        		cnt.set(i, cnt.get(i)+1);
+        		paint.setColor(Color.RED);
+        		canvas.drawRect(explosion.get(i),paint);
+        	} else {
+        		cnt.remove(i);
+        		explosion.remove(i);
+        	}
+        }
         layerManager.draw(canvas);
-//        canvas.drawBitmap(ms, 0, 0, null);
-    }
+        //        canvas.drawBitmap(ms, 0, 0, null);
+        paint.setColor(Color.RED);
+        canvas.drawRect(width-60, 4, (width-60)+50, 14, paint);
+        paint.setColor(Color.GREEN);
+        canvas.drawRect(width-60, 4, (width-60)+(player_HP*50/100), 14, paint);
+    	}
     public void run() {	
     	while (active){
     		try{
@@ -84,20 +117,29 @@ public class GameView extends View implements Runnable,OnKeyListener{
     	time +=1;
     	if (bug!= null){
     		bug.update(time);
+    		if (!bug.isAlive()){
+    			bug.die();
+    			bug = null;
+    		} else {
+	    		if (bug.getY() > getViewHeight()){
+	    			player_HP -= bug.damage();
+	    			layerManager.remove(bug);
+	    			bug = null;
+	    		}
+	    	}
     	}
     }
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		Weapon.take().setFire(event.getRawX(), event.getRawY());
+		explosion.add(new Rect(Weapon.take().getArea()));
+		cnt.add(new Integer(0));
 		if (bird.collideWith(event.getRawX(), event.getRawY())){
 			bird.setVisible(false);
 		}
 		if (bug!= null){
 			if (bug.collideWith(event.getRawX(), event.getRawY())){
 				bug.hit(Weapon.take());
-				if (!bug.isAlive()){
-					bug = null;
-				}
 			}
 		}
 		return false;
