@@ -10,20 +10,23 @@ import android.graphics.Paint;
 public class Bug extends Sprite {
 	private MoveFunction mv;
 	private int HP;
+	private int maxHP;
 	private Paint paint;
 	private static Random rand = new Random(System.currentTimeMillis());
 	private int attack;
+	
 	private static int getRandom(int bounds){
 		return (Math.abs(rand.nextInt())%bounds);
 	}
 	
-	public Bug(Bitmap image, int column, int row, GameView host){
+	public Bug(Bitmap image, int column, int row, GameThread host){
 		super(image, column, row);
 		this.host = host;
 		init();
 	}
 	private void init() {
 		setPosition(getRandom(host.getViewWidth()),0);
+		maxHP = 100;
 		HP = 100;
 		attack = 10;
 		paint = new Paint();
@@ -45,15 +48,11 @@ public class Bug extends Sprite {
 		paint.setColor(Color.RED);
 		canvas.drawRect(x, y, x+30, y+5, paint);
 		paint.setColor(Color.GREEN);
-		canvas.drawRect(x, y, x+(HP*30/100), y+5, paint);
+		canvas.drawRect(x, y, x+(HP*30/maxHP), y+5, paint);
 	}
-	public void die(){
-		this.setVisible(false);
-		host.getLayerManager().remove(this);
-	}
+	
 	public void hit(Weapon weapon){
-		HP-=weapon.getDamage(rect);
-		tint(128, 255, 0, 0);
+		HP-= weapon.getDamage(this);
 	}
 	public boolean isAlive(){
 		return (HP>0);

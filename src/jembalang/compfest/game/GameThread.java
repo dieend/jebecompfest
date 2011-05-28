@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnKeyListener;
 
-public class GameView extends View implements Runnable,OnKeyListener{
+public class GameThread extends View implements Runnable,OnKeyListener{
 	private Sprite bird;
 	private Bug bug;
 	private boolean active;
@@ -25,15 +25,11 @@ public class GameView extends View implements Runnable,OnKeyListener{
 	private int player_HP;
 	private float time;
 	private LayerManager layerManager;
-	private Vector<Rect> explosion;
-	private Vector<Integer> cnt;
 	private Paint paint;
 	private Bitmap bugImage;
 	private Bitmap birdImage;
-	public GameView(Context context) {
+	public GameThread(Context context) {
 		super(context);
-		explosion = new Vector<Rect>();
-		cnt = new Vector<Integer>();
 		paint = new Paint();
 		paint.setColor(Color.RED);
         setOnKeyListener(this);
@@ -76,7 +72,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
         bird.setPosition(xpos, ypos);
         bird.defineReferencePixel(15, 15);
         // gambar dilapis warna merah, 128 itu transparansinya. maksimum 255 minimum 0
-        bird.tint(128, 255, 0, 0);
+        bird.setTint(Color.YELLOW,10);
         layerManager.append(bird);
     }
 	@Override
@@ -84,23 +80,14 @@ public class GameView extends View implements Runnable,OnKeyListener{
 		super.onDraw(canvas);
 		width = getWidth();
 		height = getHeight();
-		for (int i=0; i<explosion.size(); i++){
-        	if (cnt.get(i)<3) {
-        		cnt.set(i, cnt.get(i)+1);
-        		paint.setColor(Color.RED);
-        		canvas.drawRect(explosion.get(i),paint);
-        	} else {
-        		cnt.remove(i);
-        		explosion.remove(i);
-        	}
-        }
         layerManager.draw(canvas);
         //        canvas.drawBitmap(ms, 0, 0, null);
         paint.setColor(Color.RED);
         canvas.drawRect(width-60, 4, (width-60)+50, 14, paint);
         paint.setColor(Color.GREEN);
         canvas.drawRect(width-60, 4, (width-60)+(player_HP*50/100), 14, paint);
-    	}
+        paint.setColor(Color.BLUE);
+    }
     public void run() {	
     	while (active){
     		try{
@@ -123,7 +110,7 @@ public class GameView extends View implements Runnable,OnKeyListener{
     		} else {
 	    		if (bug.getY() > getViewHeight()){
 	    			player_HP -= bug.damage();
-	    			layerManager.remove(bug);
+	    			bug.die();
 	    			bug = null;
 	    		}
 	    	}
@@ -132,15 +119,12 @@ public class GameView extends View implements Runnable,OnKeyListener{
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		Weapon.take().setFire(event.getRawX(), event.getRawY());
-		explosion.add(new Rect(Weapon.take().getArea()));
-		cnt.add(new Integer(0));
+
 		if (bird.collideWith(event.getRawX(), event.getRawY())){
 			bird.setVisible(false);
 		}
 		if (bug!= null){
-			if (bug.collideWith(event.getRawX(), event.getRawY())){
-				bug.hit(Weapon.take());
-			}
+			bug.hit(Weapon.take());
 		}
 		return false;
 	}
