@@ -17,6 +17,8 @@ public class Weapon {
 	private int buff;
 	private static int currentWeapon;
 	private static List<Weapon> weaponList;
+	private int ttint;
+	private int tint;
 	public static final int GUN = 0;
 	public static final int BUFF_NO = 0;
 	public static Vector<Bitmap[]> explosionImage;
@@ -52,6 +54,8 @@ public class Weapon {
 			base_damage = 20;
 			buff = BUFF_NO;
 			bullet = -1;
+			ttint = 10;
+			tint = Color.RED;
 		}
 	}
 	public int buffType() {
@@ -77,7 +81,7 @@ public class Weapon {
 					explosion[i]= Bitmap.createBitmap(tmp, i*75,0 , 75, 75);
 				}
 				explosionImage.add(explosion);
-				tmp = null;
+				tmp.recycle();
 			}
 		}
 	}
@@ -87,18 +91,17 @@ public class Weapon {
 			x -= (area.width()/2);
 			y -= (area.height()/2);
 			area.offsetTo(x, y);
-			Explosion.makeExplosion(currentWeapon, host.getLayerManager(), area);
+			Explosion.makeExplosion(explosionImage.get(currentWeapon), host.getLayerManager(), area);
 		}
 	}
 	public void setFire(float x, float y){
 		setFire((int) x, (int) y);
 	}
-	public int getDamage(Bug enemy){
+	public int getDamage(Rect enemy){
 		int damage = 0;
 		Rect k = new Rect(getArea());
-		if (k.setIntersect(getArea(), enemy.getRectangle())) {
-			damage = (countArea(k)* base_damage/countArea(enemy.getRectangle()));
-			enemy.setTint(Color.RED,10);
+		if (k.setIntersect(getArea(), enemy)) {
+			damage = (countArea(k)* base_damage/countArea(enemy));
 		}
 		return damage;
 	}
@@ -114,5 +117,10 @@ public class Weapon {
 	public void reload(int bulletNumber){
 		bullet += bulletNumber;
 	}
-
+	public int tintColor(){
+		return tint;
+	}
+	public int tintTime(){
+		return ttint;
+	}
 }
