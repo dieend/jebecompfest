@@ -1,14 +1,11 @@
 package jembalang.compfest.game;
 
-import java.util.Vector;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -26,8 +23,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	private float time;
 	private LayerManager layerManager;
 	private Paint paint;
-	private Bitmap bugImage;
-	private Bitmap birdImage;
+
 	public GameThread(Context context) {
 		super(context);
 		paint = new Paint();
@@ -35,8 +31,6 @@ public class GameThread extends View implements Runnable,OnKeyListener{
         setOnKeyListener(this);
         //Calculate scale 
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-        bugImage = BitmapFactory.decodeResource(getResources(), R.drawable.rock);
-        birdImage = BitmapFactory.decodeResource(getResources(), R.drawable.bird);
         Display display = wm.getDefaultDisplay(); 
         width = display.getWidth(); 
         height = display.getHeight();
@@ -45,8 +39,9 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	public void start(){
 		
 		active = true;
-		createbird();
+		ImageCollection.init(getResources());
 		createbug();
+		createbird();
 		player_HP = 100;
 		Weapon.setView(this);
 		time = 0;
@@ -54,7 +49,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 
 	}
 	private void createbug() {
-		bug = new Bug(bugImage, 1, 1,this);
+		bug = Bug.Factory(Bug.TYPE1, this);
 		bug.setPosition(50, 50);
 		bug.setFunction(MoveFunction.Factory(MoveFunction.LINEAR, 1));
 		layerManager.append(bug);
@@ -66,7 +61,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 		return height;
 	}
 	private void createbird() {
-        bird = new Sprite(birdImage,3,1);
+        bird = Bug.Factory(Bug.BIRD, this);
         int xpos = 0;
         int ypos = 0;
         bird.setPosition(xpos, ypos);
@@ -78,8 +73,6 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	@Override
     protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		width = getWidth();
-		height = getHeight();
         layerManager.draw(canvas);
         //        canvas.drawBitmap(ms, 0, 0, null);
         paint.setColor(Color.RED);
@@ -106,6 +99,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     		bug.update(time);
     		if (!bug.isAlive()){
     			bug.die();
+//    			Explosion.makeExplosion(Bug.DieImage.get(bug.getType()), layerManager, bug.getRectangle());
     			bug = null;
     		} else {
 	    		if (bug.getY() > getViewHeight()){
@@ -123,6 +117,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 		if (bird.collideWith(event.getRawX(), event.getRawY())){
 			bird.setVisible(false);
 		}
+		
 		if (bug!= null){
 			bug.hit(Weapon.take());
 		}

@@ -10,7 +10,7 @@ import android.graphics.Rect;
 public class Layer implements DrawableObject{
 	protected boolean visible;
 	
-	protected Bitmap image;
+	private Bitmap image;
 	protected boolean tinted;
 	protected int x;
 	protected int y;
@@ -38,7 +38,6 @@ public class Layer implements DrawableObject{
 		this.tinted = false;
 		this.mirror = false;
 		matrix = new Matrix();
-		paint = new Paint();
 		mat = new Matrix();
 		active = true;
 		float[] mirrorY = 
@@ -157,6 +156,7 @@ public class Layer implements DrawableObject{
 	public void setTint(int color,int tintTime){
 		tinted = true;
 		this.tintTime = tintTime;
+		paint = new Paint();
 		paint.setColor(color);
 		paint.setColorFilter(new LightingColorFilter(color, 1));
 	}
@@ -201,5 +201,5 @@ public class Layer implements DrawableObject{
 	public void setTransformMatrix(Matrix matrix){
 		this.matrix = matrix;
 	}
-	
+
 }

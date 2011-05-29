@@ -6,13 +6,11 @@ import android.graphics.Rect;
 public class Sprite extends Layer{
 	
 	
-	private int row;
-	private int column;
 	private int frameHeight;
 	private int frameWidth;
 	private int[] sequence;
 	private int currentFrameIdx;
-	
+	private Bitmap[] images;
 	/**
 	 * Sprite constructor. column is the number of sprite frame column in the image, so is the height
 	 * The Bitmap image should have Bitmap.Config.ARGB_8888 if possible.
@@ -20,10 +18,9 @@ public class Sprite extends Layer{
 	 * @param frameWidth one frame height
 	 * @param frameHeight one frame width
 	 */
-	public Sprite(Bitmap image, int column, int row){
-		super(image);
-		this.column = column;
-		this.row = row;
+	public Sprite(Bitmap[] images){
+		super(null);
+		this.images = images;
 		init();
 	}
 	
@@ -35,14 +32,14 @@ public class Sprite extends Layer{
 	@Override
 	public void draw(Canvas canvas){
 		if (visible){
-			int crow = (sequence[currentFrameIdx]/column) * frameHeight;
-			int ccol = (sequence[currentFrameIdx]%column) * frameWidth;
+//			int crow = (sequence[currentFrameIdx]/column) * frameHeight;
+//			int ccol = (sequence[currentFrameIdx]%column) * frameWidth;
 			mat.set(matrix);
 			mat.setRotate(degree);
 			if (mirror){
 				mat.postConcat(matrixMirror);
 			}
-			b = Bitmap.createBitmap(image, ccol, crow, getWidth(), getHeight(), mat,true);
+			b = Bitmap.createBitmap(images[sequence[currentFrameIdx]], 0, 0, getWidth(), getHeight(), mat,true);
 			if (tinted || tintTime >0){
 				tintTime-=1;
 				if (tintTime == 0){
@@ -52,6 +49,7 @@ public class Sprite extends Layer{
 				}
 			}
 			canvas.drawBitmap(b,(float)x,(float)y,paint);
+			b.recycle();
 		}
 	}
 	/**
@@ -72,13 +70,15 @@ public class Sprite extends Layer{
 		return frameWidth; 
 	}
 	private void init() {
-		this.frameWidth = image.getWidth()/column;
-		this.frameHeight = image.getHeight()/row;
+		this.frameWidth = images[0].getWidth();
+		this.frameHeight = images[0].getHeight();
 		this.currentFrameIdx = 0;
 		int offsetx = frameWidth/10;
 		int offsety = frameHeight/10;
 		rect = new Rect(x+offsetx, y+offsety, x+frameWidth-offsetx, y+frameHeight-offsety);
-		sequence = new int[column*row];
+		refx = rect.centerX();
+		refy = rect.centerY();
+		sequence = new int[images.length];
 		for (int i = 0; i<sequence.length; i++){
 			sequence[i] = i;
 		}
@@ -110,18 +110,7 @@ public class Sprite extends Layer{
 		this.currentFrameIdx = currentFrameIdx;
 	}
 	
-	/**
-	 * set the image used to draw frame
-	 * @param image
-	 */
-	public void setImage(Bitmap image,int column, int row){
-		this.image = image;
-		this.column = column;
-		this.row = row;
-		this.frameWidth = image.getWidth()/frameWidth;
-		this.frameHeight = image.getHeight()/frameHeight;
-		matrix.reset();
-	}
+
 	public void setSequence(int[] seq){
 		this.sequence = seq;
 		currentFrameIdx = 0;
