@@ -369,7 +369,7 @@ public class MovingFunction {
 			is[12]=100;
 			is[13]=speedmoved3+7;
 			is[14]=speedmoved3+14;
-			is[15]=700;
+			is[15]=800;
 			
 			length=16;
 		}else if (moved%bound==7){//STRIKE-8
@@ -400,9 +400,9 @@ public class MovingFunction {
 			is[10]=100;
 			is[11]=200;
 			is[12]=100;
-			is[13]=speedmoved3-2;
+			is[13]=speedmoved3-1;
 			is[14]=speedmoved3+14;
-			is[15]=700;
+			is[15]=800;
 			
 			length=16;
 		}
