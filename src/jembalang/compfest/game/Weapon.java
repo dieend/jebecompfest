@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Vector;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.Log;
@@ -22,14 +21,12 @@ public class Weapon {
 	private int tint;
 	public static final int GUN = 0;
 	public static final int BUFF_NO = 0;
-	public static Vector<Bitmap[]> explosionImage;
 	private static GameThread host;
 	
 	
 	public static void init(GameThread h,int...weaponTypes) {
 		if (weaponList == null){
-			weaponList = new ArrayList<Weapon>();
-			explosionImage = new Vector<Bitmap[]>(); 
+			weaponList = new ArrayList<Weapon>(); 
 			currentWeapon = 0;
 			host = h;
 			for(int type: weaponTypes){
@@ -45,7 +42,6 @@ public class Weapon {
 	}
 	public static void destroy() {
 		weaponList = null;
-		explosionImage = null;
 		host = null;
 	}
 	public static void nextWeapon() {
@@ -82,13 +78,7 @@ public class Weapon {
 				Weapon wp;
 				wp = new Weapon(type);
 				weaponList.add(wp);
-				Bitmap[] explosion = new Bitmap[12];
-				Bitmap tmp = BitmapFactory.decodeResource(host.getResources(), R.drawable.explosion);
-				for (int i=0; i<12; i++){
-					explosion[i]= Bitmap.createBitmap(tmp, i*75,0 , 75, 75);
-				}
-				explosionImage.add(explosion);
-				tmp.recycle();
+				ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type);
 			}
 		}
 	}
@@ -98,7 +88,8 @@ public class Weapon {
 			x -= (area.width()/2);
 			y -= (area.height()/2);
 			area.offsetTo(x, y);
-			Explosion.makeExplosion(explosionImage.get(currentWeapon), host.getLayerManager(), area);
+			Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type), 
+					host.getLayerManager(), area);
 		}
 	}
 	public void setFire(float x, float y){

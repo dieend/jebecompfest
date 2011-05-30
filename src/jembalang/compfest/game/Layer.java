@@ -16,7 +16,6 @@ public class Layer implements DrawableObject{
 	protected int y;
 	protected int tintTime;
 	protected Paint paint;
-	protected Matrix matrix;
 	protected Matrix matrixMirror;
 	protected Matrix mat;
 	protected boolean mirror;
@@ -37,7 +36,6 @@ public class Layer implements DrawableObject{
 	private void init() {
 		this.tinted = false;
 		this.mirror = false;
-		matrix = new Matrix();
 		mat = new Matrix();
 		active = true;
 		float[] mirrorY = 
@@ -74,11 +72,10 @@ public class Layer implements DrawableObject{
 	}
 	public void draw(Canvas canvas){
 		if (visible){
-			mat.set(matrix);
+			mat.setRotate(degree);
 			if (mirror){
 				mat.postConcat(matrixMirror);
 			}
-			mat.setRotate(degree);
 			b = Bitmap.createBitmap(image, 0, 0, getWidth(), getHeight(), mat,true);
 			if (tinted || tintTime>0){
 			
@@ -183,7 +180,8 @@ public class Layer implements DrawableObject{
 	 * set the image return normally
 	 */
 	public void setNormal(){
-		matrix.reset();
+		degree = 0;
+		mirror = false;
 	}
 	
 	/**
@@ -193,13 +191,9 @@ public class Layer implements DrawableObject{
 	public void setRotate(int degrees){
 		degree = (float)degrees;
 	}
-	
-	/**
-	 * manipulate image by the matrix
-	 * @param matrix
-	 */
-	public void setTransformMatrix(Matrix matrix){
-		this.matrix = matrix;
+	public void setRotate(double degrees){
+		degree = (float)(degrees);
 	}
+	
 
 }

@@ -69,7 +69,10 @@ public class Bug extends Sprite {
 		}
 	}
 	public void update(float time){
-		move(mf.getdx(time), mf.getdy(time));
+		float dx = mf.getdx(time);
+		float dy = mf.getdy(time);
+		setRotate(Math.atan2(dy, dx)* 180/Math.PI-90);
+		move(dx, dy);
 		nextFrame();
 		//tes
 	}
