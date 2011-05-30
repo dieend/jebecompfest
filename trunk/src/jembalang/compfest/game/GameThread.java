@@ -1,11 +1,10 @@
 package jembalang.compfest.game;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -14,13 +13,16 @@ import android.view.WindowManager;
 import android.view.View.OnKeyListener;
 
 public class GameThread extends View implements Runnable,OnKeyListener{
-	private Sprite bird;
 	private Bug bug;
 	private boolean active;
 	private int width;
 	private int height;
 	private int player_HP;
+	private int gameScore;
+	private int gameHit;
+	private int gameShot;
 	private float time;
+	private Rect fire;
 	private LayerManager layerManager;
 	private Paint paint;
 
@@ -28,6 +30,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 		super(context);
 		paint = new Paint();
 		paint.setColor(Color.RED);
+		fire = new Rect();
         setOnKeyListener(this);
         //Calculate scale 
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
@@ -41,17 +44,17 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 		active = true;
 		ImageCollection.init(getResources());
 		createbug();
-		createbird();
 		player_HP = 100;
-		Weapon.setView(this);
+		gameScore = 0;
+		gameHit = 0;
+		gameShot = 0;
+		Weapon.init(this, Weapon.GUN);
 		time = 0;
 		((Thread)new Thread(this)).start();
 
 	}
 	private void createbug() {
 		bug = Bug.Factory(Bug.TYPE1, this);
-		bug.setPosition(50, 50);
-		bug.setFunction(MoveFunction.Factory(MoveFunction.LINEAR, 1));
 		layerManager.append(bug);
 	}
 	public int getViewWidth() {
@@ -60,26 +63,25 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	public int getViewHeight(){
 		return height;
 	}
-	private void createbird() {
-        bird = Bug.Factory(Bug.BIRD, this);
-        int xpos = 0;
-        int ypos = 0;
-        bird.setPosition(xpos, ypos);
-        bird.defineReferencePixel(15, 15);
-        // gambar dilapis warna merah, 128 itu transparansinya. maksimum 255 minimum 0
-        bird.setTint(Color.YELLOW,10);
-        layerManager.append(bird);
-    }
+
 	@Override
     protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		paint.setColor(Color.WHITE); 
+		paint.setStyle(Paint.Style.FILL); 
+		canvas.drawPaint(paint); 
+
+		paint.setColor(Color.BLACK); 
+		paint.setTextSize(10);
+		paint.setAntiAlias(true);
+		canvas.drawText(""+gameScore, 10, 10, paint);
+        canvas.drawText(""+gameHit+"/"+gameShot, 10, 20, paint);
+        paint.setAntiAlias(false);
         layerManager.draw(canvas);
-        //        canvas.drawBitmap(ms, 0, 0, null);
         paint.setColor(Color.RED);
         canvas.drawRect(width-60, 4, (width-60)+50, 14, paint);
         paint.setColor(Color.GREEN);
         canvas.drawRect(width-60, 4, (width-60)+(player_HP*50/100), 14, paint);
-        paint.setColor(Color.BLUE);
     }
     public void run() {	
     	while (active){
@@ -99,7 +101,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     		bug.update(time);
     		if (!bug.isAlive()){
     			bug.die();
-//    			Explosion.makeExplosion(Bug.DieImage.get(bug.getType()), layerManager, bug.getRectangle());
+//    			Explosion.makeExplosion(Bug.DieImage.get(bug.getType()), bug.getRectangle());
     			bug = null;
     		} else {
 	    		if (bug.getY() > getViewHeight()){
@@ -112,38 +114,22 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     }
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		Weapon.take().setFire(event.getRawX(), event.getRawY());
-
-		if (bird.collideWith(event.getRawX(), event.getRawY())){
-			bird.setVisible(false);
+		if (event.getAction() == MotionEvent.ACTION_DOWN){
+			Weapon.take().setFire(event.getRawX(), event.getRawY());
+			fire = Weapon.take().getArea();
+			gameShot += 1;
+			boolean[] hit = new boolean[1];
+			if (bug!= null){
+				gameScore += bug.hit(Weapon.take(),hit);
+				if (hit[0]) {
+					gameHit += 1;
+				}
+			}
 		}
-		
-		if (bug!= null){
-			bug.hit(Weapon.take());
-		}
-		return false;
+		return true;
 	}
 
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
-			bird.move(-3, 0);
-			bird.setMirror(true);
-			bird.setRotate(0);
-			bird.prevFrame();
-		} else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
-			bird.move(3, 0);
-			bird.setMirror(false);
-			bird.setRotate(0);
-			bird.nextFrame();
-		} else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN){
-			bird.move(0, 3);
-			bird.setRotate(90);
-			bird.nextFrame();
-		} else if (keyCode == KeyEvent.KEYCODE_DPAD_UP){
-			bird.move(0, -3);
-			bird.setRotate(270);
-			bird.nextFrame();
-		}
 		return false;
 	}
 	public LayerManager getLayerManager(){

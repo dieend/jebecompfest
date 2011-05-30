@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 public class Bug extends Sprite {
 	private MoveFunction mv;
@@ -15,6 +16,7 @@ public class Bug extends Sprite {
 	private Paint paint;
 	private static Random rand = new Random(System.currentTimeMillis());
 	private int attack;
+	private int base_score;
 	private int type;
 	public static Vector<Bitmap[]> DieImage = new Vector<Bitmap[]>();
 	public static Vector<Bitmap[]> Image = new Vector<Bitmap[]>();
@@ -35,6 +37,8 @@ public class Bug extends Sprite {
 			tmp.maxHP = 100;
 			tmp.HP = 100;
 			tmp.attack = 10;
+			tmp.setFunction(MoveFunction.Factory(MoveFunction.LINEAR, 1));
+			tmp.base_score = 100;
 //			tmp.paint = new Paint();
 		} else if (bugType == BIRD){
 			tmp = new Bug(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG, bugType), host);
@@ -58,6 +62,7 @@ public class Bug extends Sprite {
 	}
 	public void update(float time){
 		move(mv.getdx(time), mv.getdy(time));
+		nextFrame();
 		//tes
 	}
 	@Override
@@ -69,12 +74,20 @@ public class Bug extends Sprite {
 		canvas.drawRect(x, y, x+(HP*30/maxHP), y+5, paint);
 	}
 	
-	public void hit(Weapon weapon){
-		int d=weapon.getDamage(getRectangle());
-		if (d>0){
-			HP-=d; 
-			setTint(weapon.tintColor(),weapon.tintTime());
+	public int hit(Weapon weapon,boolean[] hitted){
+		int[] score = new int[1];
+		score[0] = 0;
+		hitted[0] = false;
+		if (Rect.intersects(weapon.getArea(),getRectangle())){
+			hitted[0] = true;
+			score[0] = base_score;
+			int d=weapon.getDamage(getRectangle(),score);
+			if (d>0){
+				HP-=d; 
+				setTint(weapon.tintColor(),weapon.tintTime());
+			}
 		}
+		return score[0];
 	}
 	public boolean isAlive(){
 		return (HP>0);

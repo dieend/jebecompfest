@@ -1,6 +1,5 @@
 package jembalang.compfest.game;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 

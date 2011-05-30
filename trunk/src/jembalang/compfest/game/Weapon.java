@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class Weapon {
 	private int bullet;
@@ -24,22 +25,28 @@ public class Weapon {
 	public static Vector<Bitmap[]> explosionImage;
 	private static GameThread host;
 	
-	public static void setView(GameThread h){
-		host = h;
-	}
-	public static void init() {
+	
+	public static void init(GameThread h,int...weaponTypes) {
 		if (weaponList == null){
 			weaponList = new ArrayList<Weapon>();
 			explosionImage = new Vector<Bitmap[]>(); 
 			currentWeapon = 0;
-			Weapon.Factory(GUN);
+			host = h;
+			for(int type: weaponTypes){
+				Weapon.Factory(type);
+			}
 		}
 	}
 	public static Weapon take(){
 		if (weaponList == null){
-			init();
+			Log.e("JB", "Weapon not initialized");
 		}
 		return weaponList.get(currentWeapon);
+	}
+	public static void destroy() {
+		weaponList = null;
+		explosionImage = null;
+		host = null;
 	}
 	public static void nextWeapon() {
 		currentWeapon = (currentWeapon + 1) % weaponList.size();
@@ -50,7 +57,7 @@ public class Weapon {
 	private Weapon(int type){
 		this.type = type;
 		if (type == GUN){
-			area = new Rect(0,0,40,40);
+			area = new Rect(0,0,15,15);
 			base_damage = 20;
 			buff = BUFF_NO;
 			bullet = -1;
@@ -97,14 +104,19 @@ public class Weapon {
 	public void setFire(float x, float y){
 		setFire((int) x, (int) y);
 	}
-	public int getDamage(Rect enemy){
+	public int getDamage(Rect enemy, int[] score){
 		int damage = 0;
-		Rect k = new Rect(getArea());
+		Rect k = new Rect();
+		int a = countArea(getArea());
+		int e = countArea(enemy);
 		if (k.setIntersect(getArea(), enemy)) {
-			damage = (countArea(k)* base_damage/countArea(enemy));
+			int i = countArea(k);
+			damage = (i * base_damage/Math.min(e,a));
+			score[0] = score[0] * i / a;
 		}
 		return damage;
 	}
+	
 	public static int countArea(Rect a){
 		return ((a.right-a.left) * (a.bottom-a.top));
 	}
