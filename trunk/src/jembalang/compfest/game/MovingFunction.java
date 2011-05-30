@@ -47,7 +47,7 @@ public class MovingFunction {
 	
 	
 	////////
-	public static final int bound=8;
+	public static final int bound=10;
 	
 	private static Random random = new Random(System.currentTimeMillis());
 	
@@ -405,13 +405,116 @@ public class MovingFunction {
 			is[15]=800;
 			
 			length=16;
+		}else if (moved%bound==8){//STRIKE-9
+			int speedmoved3=3;
+			if (moved==8){
+				speedmoved3=3;
+			}else if (moved==8+bound){
+				speedmoved3=5;
+			}else if (moved==8+2*bound){
+				speedmoved3=7;
+			}
+			
+			bug.setPosition(160, 50);
+			is[0]=0;
+			is[1]=1;
+			
+			is[2]=MovingFunction.ARC;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=160;
+			is[6]=150;
+			is[7]=100;
+			is[8]=1;
+			is[9]=speedmoved3;//speed
+			
+			is[10]=MovingFunction.ARC;
+			is[11]=160;
+			is[12]=150;
+			is[13]=160;
+			is[14]=250;
+			is[15]=100;
+			is[16]=-1;
+			is[17]=speedmoved3;//speed
+			
+			is[18]=MovingFunction.ARC;
+			is[19]=160;
+			is[20]=250;
+			is[21]=160;
+			is[22]=350;
+			is[23]=100;
+			is[24]=1;
+			is[25]=speedmoved3;
+			
+			is[26]=MovingFunction.ARC;
+			is[27]=160;
+			is[28]=350;
+			is[29]=160;
+			is[30]=500;
+			is[31]=100;
+			is[32]=-1;
+			is[33]=speedmoved3;
+			
+			length=34;
+		}else if (moved%bound==9){//STRIKE-10
+			int speedmoved3=3;
+			if (moved==9){
+				speedmoved3=3;
+			}else if (moved==9+bound){
+				speedmoved3=5;
+			}else if (moved==9+2*bound){
+				speedmoved3=7;
+			}
+			
+			bug.setPosition(160, 50);
+			is[0]=0;
+			is[1]=1;
+			
+			is[2]=MovingFunction.ARC;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=160;
+			is[6]=150;
+			is[7]=100;
+			is[8]=-1;
+			is[9]=speedmoved3;//speed
+			
+			is[10]=MovingFunction.ARC;
+			is[11]=160;
+			is[12]=150;
+			is[13]=160;
+			is[14]=250;
+			is[15]=100;
+			is[16]=1;
+			is[17]=speedmoved3;//speed
+			
+			is[18]=MovingFunction.ARC;
+			is[19]=160;
+			is[20]=250;
+			is[21]=160;
+			is[22]=350;
+			is[23]=100;
+			is[24]=-1;
+			is[25]=speedmoved3;
+			
+			is[26]=MovingFunction.ARC;
+			is[27]=160;
+			is[28]=350;
+			is[29]=160;
+			is[30]=500;
+			is[31]=100;
+			is[32]=1;
+			is[33]=speedmoved3;
+			
+			length=34;
 		}
+		
 	}
 	
 //	public static final int STAY = 0;//x1,y1,boolstay,timestay
 //	public static final int LINE = 1;//x1,y1,x2,y2,speed
 //	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
 //	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
 	public static void transform(float[] ftx,float[] fty,int tx,int ty,int length){
@@ -443,7 +546,7 @@ public class MovingFunction {
 //	public static final int STAY = 0;//x1,y1,boolstay,timestay
 //	public static final int LINE = 1;//x1,y1,x2,y2,speed
 //	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
 //	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 
 	private int idx=2;
@@ -616,7 +719,7 @@ public class MovingFunction {
 //	public static final int STAY = 0;//x1,y1,boolstay,timestay
 //	public static final int LINE = 1;//x1,y1,x2,y2,speed
 //	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
 //	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
 	public float getdy(float t){
@@ -756,5 +859,5 @@ public class MovingFunction {
 //public static final int STAY = 0;//x1,y1,boolstay,timestay
 //public static final int LINE = 1;//x1,y1,x2,y2,speed
 //public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
 //public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
