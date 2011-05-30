@@ -63,6 +63,10 @@ public class ImageCollection {
 			id = R.drawable.bird;
 			column = 3;
 			row = 1;
+		} else if (bugType == Bug.BUG1){
+			id = R.drawable.bug;
+			column = 1;
+			row = 1;
 		}
 		tmp= BitmapFactory.decodeResource(resources, id);
 		image = splitImage(tmp,row,column);
@@ -72,6 +76,24 @@ public class ImageCollection {
 	
 	private Bitmap[] BugDieImageLoader(int bugDieType){
 		Bitmap[] image = null;
+		int id = R.drawable.rock;
+		int column=1, row=1;
+		Bitmap tmp=null;
+		if (bugDieType == Bug.TYPE1){
+			id = R.drawable.rock;
+			column = 1;
+			row = 1;
+		} else if (bugDieType == Bug.BIRD){
+			id = R.drawable.bird;
+			column = 3;
+			row = 1;
+		} else if (bugDieType == Bug.BUG1){
+			id = R.drawable.bugdie;
+			column = 1;
+			row = 1;
+		}
+		tmp= BitmapFactory.decodeResource(resources, id);
+		image = splitImage(tmp,row,column);
 		BugDieImage.put(bugDieType, image);
 		return image;
 	}

@@ -1,5 +1,7 @@
 package jembalang.compfest.game;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +15,7 @@ import android.view.WindowManager;
 import android.view.View.OnKeyListener;
 
 public class GameThread extends View implements Runnable,OnKeyListener{
-	private Bug bug;
+	private ArrayList<Bug> bug;
 	private boolean active;
 	private int width;
 	private int height;
@@ -22,17 +24,18 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	private int gameHit;
 	private int gameShot;
 	private float time;
-	private Rect fire;
 	private LayerManager layerManager;
 	private Paint paint;
-
+	private int inscreen;
+	
 	public GameThread(Context context) {
 		super(context);
 		paint = new Paint();
 		paint.setColor(Color.RED);
-		fire = new Rect();
         setOnKeyListener(this);
-        //Calculate scale 
+        //Calculate scale
+        bug = new ArrayList<Bug>();
+        inscreen = 1;
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay(); 
         width = display.getWidth(); 
@@ -54,8 +57,9 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 
 	}
 	private void createbug() {
-		bug = Bug.Factory(Bug.TYPE1, this);
-		layerManager.append(bug);
+		for (int i=0; i<20; i++){
+			bug.add(i, Bug.Factory(Bug.BUG1, this));
+		}
 	}
 	public int getViewWidth() {
 		return width;
@@ -68,20 +72,17 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		paint.setColor(Color.WHITE); 
-		paint.setStyle(Paint.Style.FILL); 
-		canvas.drawPaint(paint); 
-
-		paint.setColor(Color.BLACK); 
 		paint.setTextSize(10);
 		paint.setAntiAlias(true);
+		paint.setStyle(Paint.Style.FILL);
 		canvas.drawText(""+gameScore, 10, 10, paint);
         canvas.drawText(""+gameHit+"/"+gameShot, 10, 20, paint);
         paint.setAntiAlias(false);
-        layerManager.draw(canvas);
         paint.setColor(Color.RED);
         canvas.drawRect(width-60, 4, (width-60)+50, 14, paint);
         paint.setColor(Color.GREEN);
         canvas.drawRect(width-60, 4, (width-60)+(player_HP*50/100), 14, paint);
+        layerManager.draw(canvas);
     }
     public void run() {	
     	while (active){
@@ -97,18 +98,28 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     }
     public void updatePhysics() {
     	time +=1;
-    	if (bug!= null){
-    		bug.update(time);
-    		if (!bug.isAlive()){
-    			bug.die();
-//    			Explosion.makeExplosion(Bug.DieImage.get(bug.getType()), bug.getRectangle());
-    			bug = null;
-    		} else {
-	    		if (bug.getY() > getViewHeight()){
-	    			player_HP -= bug.damage();
-	    			bug.die();
-	    			bug = null;
+    	for (int i=0; i<inscreen; i++){
+	    	if (i<bug.size() && bug.get(i)!= null){
+	    		Bug b = bug.get(i);
+	    		if (!b.visible){
+	    			b.visible = true;
+	    			layerManager.append(b);
 	    		}
+	    		b.update(time);
+	    		if (!b.isAlive()){
+	    			Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG_DIE, b.getType())
+	    									,layerManager, b.getRectangle(),10);
+	    			bug.remove(i);
+	    			b.die();
+	    			b = null;
+	    		} else {
+		    		if (b.getY() > getViewHeight()){
+		    			player_HP -= b.damage();
+		    			bug.remove(i);
+		    			b.die();
+		    			b = null;
+		    		}
+		    	}
 	    	}
     	}
     }
@@ -116,13 +127,14 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	public boolean onTouchEvent(MotionEvent event){
 		if (event.getAction() == MotionEvent.ACTION_DOWN){
 			Weapon.take().setFire(event.getRawX(), event.getRawY());
-			fire = Weapon.take().getArea();
 			gameShot += 1;
 			boolean[] hit = new boolean[1];
-			if (bug!= null){
-				gameScore += bug.hit(Weapon.take(),hit);
-				if (hit[0]) {
-					gameHit += 1;
+			for (Bug b:bug){
+				if (b!= null && b.visible){
+					gameScore += b.hit(Weapon.take(),hit);
+					if (hit[0]) {
+						gameHit += 1;
+					}
 				}
 			}
 		}
