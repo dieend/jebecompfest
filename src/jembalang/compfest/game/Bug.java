@@ -1,7 +1,6 @@
 package jembalang.compfest.game;
 
 import java.util.Random;
-import java.util.Vector;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class Bug extends Sprite {
-	private MoveFunction mv;
+	private MovingFunction mf;
 	private int HP;
 	private int maxHP;
 	private Paint paint;
@@ -18,10 +17,9 @@ public class Bug extends Sprite {
 	private int attack;
 	private int base_score;
 	private int type;
-	public static Vector<Bitmap[]> DieImage = new Vector<Bitmap[]>();
-	public static Vector<Bitmap[]> Image = new Vector<Bitmap[]>();
 	public static final int TYPE1 = 0;
 	public static final int BIRD= 1;
+	public static final int BUG1 = 2;
 	private static int getRandom(int bounds){
 		return (Math.abs(rand.nextInt())%bounds);
 	}
@@ -34,16 +32,26 @@ public class Bug extends Sprite {
 		if (bugType == TYPE1){
 			tmp = new Bug(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG, bugType), host);
 			tmp.setPosition(getRandom(host.getViewWidth()),0);
-			tmp.maxHP = 100;
-			tmp.HP = 100;
+			tmp.maxHP = 20;
+			tmp.HP = tmp.maxHP;
 			tmp.attack = 10;
-			tmp.setFunction(MoveFunction.Factory(MoveFunction.LINEAR, 1));
+			tmp.setFunction(null);
 			tmp.base_score = 100;
 //			tmp.paint = new Paint();
 		} else if (bugType == BIRD){
 			tmp = new Bug(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG, bugType), host);
 			tmp.maxHP = 1;
+		} else if (bugType == BUG1){
+			tmp = new Bug(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG, bugType), host);
+			tmp.setPosition(getRandom(host.getViewWidth()),0);
+			tmp.maxHP = 30;
+			tmp.HP = tmp.maxHP;
+			tmp.attack = 10;
+			tmp.setFunction(null);
+			tmp.base_score = 100;
+//			tmp.paint = new Paint();
 		}
+		tmp.visible = false;
 		tmp.paint = new Paint();
 		tmp.type = bugType;
 		return tmp;
@@ -53,15 +61,15 @@ public class Bug extends Sprite {
 		this.host = host;
 	}
 
-	public void setFunction(MoveFunction mv){
-		if (mv == null){
-			this.mv = MoveFunction.Factory(MoveFunction.STAY, 0);
+	public void setFunction(MovingFunction mf){
+		if (mf == null){
+			this.mf = new MovingFunction(this, MovingFunction.getEasy());
 		} else {
-			this.mv = mv;
+			this.mf = mf;
 		}
 	}
 	public void update(float time){
-		move(mv.getdx(time), mv.getdy(time));
+		move(mf.getdx(time), mf.getdy(time));
 		nextFrame();
 		//tes
 	}
