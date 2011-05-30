@@ -1,6 +1,8 @@
 package jembalang.compfest.game;
 
 
+import java.util.Random;
+
 import android.util.Log;
 
 public class MovingFunction {
@@ -9,8 +11,16 @@ public class MovingFunction {
 	public static final int LINE = 1;//x1,y1,x2,y2,speed
 	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
 	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
 	public static int gcd(int a,int b){
+		if (a==0){
+		  a=b;
+		}
+		if (b==0){
+			b=a;
+		}
+		
 		if (a<b){
 			int temp=a;
 			a=b;
@@ -32,11 +42,38 @@ public class MovingFunction {
 	public void setStatus(int status){
 		is[0]=status;
 	}
+	
+	Bug bug;
+	
+	
+	////////
+	public static final int bound=10;
+	
+	private static Random random = new Random(System.currentTimeMillis());
+	
+    private static int getRandom()
+    {
+        return Math.abs(random.nextInt()%bound);
+    }
+    
+	public static int getEasy(){
+		return getRandom();
+	}
+	
+	public static int getMedium(){
+		return getRandom()+bound;
+	}
+	
+	public static int getHard(){
+		return getRandom()+2*bound;
+	}
+	///////
+	
 	//is[0]=status,is[1]=length param,is[2]=start param
-	public MovingFunction(int...is){
+	public MovingFunction(Bug bug,int moved){
+		this.bug=bug;
 		idx=2;
-		length=is.length;
-		
+		counterxcount=0;
 		for(int i=0;i<is.length;++i){
 			this.is[i]=is[i];
 		}
@@ -47,8 +84,110 @@ public class MovingFunction {
 		for(int i=0;i<xcount.length;++i){
 			xcount[i]=0;
 		}
+		if (moved%bound==0){
+			bug.setPosition(50, 30);
+			is[0]=0;
+			is[1]=1;
+			is[2]=MovingFunction.LINE;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=bug.getX();
+			is[6]=510;
+			
+			//speed
+			if (moved==0){
+				is[7]=2;//speed
+			}else if (moved==0+bound){
+				is[7]=4;
+			}else if (moved==0+2*bound){
+				is[7]=6;
+			}
+			length=8;
+			
+		}else if (moved%bound==1){
+			bug.setPosition(150, 30);
+			is[0]=0;
+			is[1]=1;
+			is[2]=MovingFunction.LINE;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=bug.getX();
+			is[6]=510;
+			
+			//speed
+			if (moved==1){
+				is[7]=2;//speed
+			}else if (moved==1+bound){
+				is[7]=4;
+			}else if (moved==1+2*bound){
+				is[7]=6;
+			}
+			length=8;
+			
+		}else if (moved%bound==2){
+			bug.setPosition(300, 30);
+			is[0]=0;
+			is[1]=1;
+			is[2]=MovingFunction.LINE;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=bug.getX();
+			is[6]=510;
+			
+			//speed
+			if (moved==2){
+				is[7]=2;//speed
+			}else if (moved==2+bound){
+				is[7]=4;
+			}else if (moved==2+2*bound){
+				is[7]=6;
+			}
+			length=8;
+			
+		}else if (moved%bound==3){
+			bug.setPosition(50, 50);
+			is[0]=0;
+			is[1]=1;
+			is[2]=MovingFunction.LINE;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=250;
+			is[6]=100;
+			
+			is[7]=1;//speed
+			
+			is[8]=MovingFunction.LINE;
+			is[9]=0;
+			is[10]=0;
+			is[11]=50;
+			is[12]=150;
+			
+			is[13]=1;//speed
+			
+			is[14]=MovingFunction.LINE;
+			is[15]=0;
+			is[16]=0;
+			is[17]=250;
+			is[18]=200;
+			
+			is[19]=1;//speed
+			
+			is[20]=0;
+			is[21]=0;
+			is[22]=50;
+			is[23]=250;
+			
+			is[24]=1;//speed
+			
+			length=25;
+		}
 	}
 	
+//	public static final int STAY = 0;//x1,y1,boolstay,timestay
+//	public static final int LINE = 1;//x1,y1,x2,y2,speed
+//	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
+//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
 	public static void transform(float[] ftx,float[] fty,int tx,int ty,int length){
 		for(int i=0;i<length;++i){
@@ -58,13 +197,16 @@ public class MovingFunction {
 	}
 	
 	
-	public static void rotate(float[] ftx,float[] fty,double theta,int length){
+	public void rotate(float[] ftx,float[] fty,double theta,int length){
+		double d=(theta*Math.PI)/180;
 		for(int i=0;i<length;++i){
 			float y=fty[i];
 			float x=ftx[i];
-			double d=(theta*Math.PI)/180;
-			fty[i]=(y*(float)Math.cos(d))-(x*(float)Math.sin(d)); 
-			ftx[i]=(y*(float)Math.sin(d))+(x*(float)Math.cos(d));
+			ftx[i]=(x*(float)Math.cos(d))-(y*(float)Math.sin(d)); 
+			fty[i]=(x*(float)Math.sin(d))+(y*(float)Math.cos(d));
+			if (i==51){
+				System.out.println("Nilai fx : " + ftx[i] + "  Nilai fy : " + fty[i]);
+			}
 		}
 	}
 	
@@ -72,15 +214,16 @@ public class MovingFunction {
 	private void createAll(){
 		
 	}
-//	public static final int STAY = 0;//x1,y1,intisstayforever,timestay(milis)
+	
+//	public static final int STAY = 0;//x1,y1,boolstay,timestay
 //	public static final int LINE = 1;//x1,y1,x2,y2,speed
 //	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
-//	public static final int COMBINE = 4;//all
+//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 
 	private int idx=2;
 	
-	private int[] xcount = new int[300];
+	private int[] xcount = new int[3000];
 	private int counterxcount=0;
 	
 	private boolean x1lessx2;
@@ -98,6 +241,9 @@ public class MovingFunction {
 	private float[] allarcy = new float[3000];
 	private int idxforarcx=0;
 	private int idxforarcy=0;
+	
+	private float fastarctemp=0;
+	private float radiusfastarc=0;
 	
 	private void generateNextArc(float a,float b,int dir){
 		int temp=2*Math.round(a);
@@ -142,8 +288,8 @@ public class MovingFunction {
 				}
 			}else if (is[idx]==MovingFunction.LINE){
 				if (xcount[counterxcount]<1){
-					x1lessx2=(is[idx+1]<is[idx+3]);
-					y1lessy2=(is[idx+2]<is[idx+4]);
+					x1lessx2=(is[idx+1]<=is[idx+3]);
+					y1lessy2=(is[idx+2]<=is[idx+4]);
 					int nextx=is[idx+3]-is[idx+1];
 					int nexty=is[idx+4]-is[idx+2];
 					int divider = gcd((int)Math.abs(nextx), (int)Math.abs(nexty));
@@ -152,7 +298,7 @@ public class MovingFunction {
 					xcount[counterxcount]++;
 				}
 				if (x1lessx2){
-					if (is[idx+1]<is[idx+3]){
+					if (is[idx+1]<=is[idx+3]){
 						is[idx+1]+=nextxx;
 						return (float)nextxx;
 					}
@@ -164,7 +310,7 @@ public class MovingFunction {
 					counterxcount++;
 					return 0;
 				}else{
-					if (is[idx+1]>is[idx+3]){
+					if (is[idx+1]>=is[idx+3]){
 						is[idx+1]+=nextxx;
 						return (float)nextxx;
 					}
@@ -185,20 +331,56 @@ public class MovingFunction {
 					float b=allarcx[0];
 					b=allarcy[0];
 					
-					float ox=(is[idx+3]-is[idx+1])/2;
-					float oy=(is[idx+4]-is[idx+2])/2;
-					rotate(allarcx, allarcy, Math.atan((is[idx+1]-ox)/(is[idx+2]-oy))*180/Math.PI, idxforarcx+1);
+					float ox=(is[idx+3]-is[idx+1])/2 + (is[idx+1]);
+					float oy=(is[idx+4]-is[idx+2])/2 + (is[idx+2]);
+					
+					rotate(allarcx, allarcy, -Math.atan(( (is[idx+2]-oy)/(is[idx+1]-ox) ))*180/Math.PI  , idxforarcx+1);
 					
 					transform(allarcx,allarcy, (is[idx+3]-is[idx+1])/2, (is[idx+4]-is[idx+2])/2, idxforarcx+1);
 					xcount[counterxcount]++;
 				}
-				if (idxforarcx>0){
-					idxforarcx--;
+				if (idxforarcx-is[idx+7]>0){
+					idxforarcx-=is[idx+7];
 //					float c=(allarcx[idxforarcx]-allarcx[idxforarcx+1]);
-					return (Math.round(allarcx[idxforarcx]-allarcx[idxforarcx+1])*is[idx+7]);
+					return Math.round(allarcx[idxforarcx]-allarcx[idxforarcx+is[idx+7]]);
 				}else{
+					
+					xcurr=is[idx+3];
+					ycurr=is[idx+4];
+					is[idx+9]=xcurr;
+					is[idx+10]=ycurr;
+					idx+=8;
+					counterxcount++;
+					
 					return 0;
 				}
+			}else if (is[idx]==MovingFunction.FASTARC){
+				
+				if (xcount[counterxcount]<1){
+					fastarctemp=0;
+					radiusfastarc=getDistance(is[idx+1], is[idx+2], is[idx+3], is[idx+4]);
+					xcount[counterxcount]++;
+					xcurr=is[idx+1];
+					ycurr=is[idx+2];
+				}
+				
+				if (fastarctemp<is[idx+7]){
+					double ft1 = radiusfastarc*Math.cos(fastarctemp)+is[idx+3];
+					double ft = radiusfastarc*Math.cos(fastarctemp-1)+is[idx+3];
+					fastarctemp++;
+					float ret = (float)(ft1-ft);
+					ret+=(0.1*is[idx+5]);
+					xcurr+=ret;
+					return ret;
+				}else{
+					
+					is[idx+9]=xcurr;
+					is[idx+10]=ycurr;
+					idx+=8;
+					counterxcount++;
+					return 0;
+				}
+				
 			}
 			return 0; 
 		}
@@ -206,11 +388,11 @@ public class MovingFunction {
 	}
 
 	
-//	public static final int STAY = 0;//x1,y1,intisstayforever,timestay(milis)
+//	public static final int STAY = 0;//x1,y1,boolstay,timestay
 //	public static final int LINE = 1;//x1,y1,x2,y2,speed
 //	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
-//	public static final int COMBINE = 4;//all
+//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
 	public float getdy(float t){
 		while (idx<length){
@@ -244,8 +426,8 @@ public class MovingFunction {
 				}
 			}else if (is[idx]==MovingFunction.LINE){
 				if (xcount[counterxcount]<1){
-					x1lessx2=(is[idx+1]<is[idx+3]);
-					y1lessy2=(is[idx+2]<is[idx+4]);
+					x1lessx2=(is[idx+1]<=is[idx+3]);
+					y1lessy2=(is[idx+2]<=is[idx+4]);
 					int nextx=is[idx+3]-is[idx+1];
 					int nexty=is[idx+4]-is[idx+2];
 					int divider = gcd((int)Math.abs(nextx), (int)Math.abs(nexty));
@@ -255,7 +437,7 @@ public class MovingFunction {
 				}
 				
 				if (y1lessy2){
-					if (is[idx+2]<is[idx+4]){
+					if (is[idx+2]<=is[idx+4]){
 						is[idx+2]+=nextyy;
 						return (float)nextyy;
 					}
@@ -267,7 +449,7 @@ public class MovingFunction {
 					counterxcount++;
 					return 0;
 				}else{
-					if (is[idx+2]>is[idx+4]){
+					if (is[idx+2]>=is[idx+4]){
 						is[idx+2]+=nextyy;
 						return (float)nextyy;
 					}
@@ -288,21 +470,57 @@ public class MovingFunction {
 					float b=allarcx[0];
 					b=allarcy[0];
 					
-					float ox=(is[idx+3]-is[idx+1])/2;
-					float oy=(is[idx+4]-is[idx+2])/2;
-					rotate(allarcx, allarcy, Math.atan((is[idx+1]-ox)/(is[idx+2]-oy))*180/Math.PI, idxforarcx+1);
+					float ox=(is[idx+3]-is[idx+1])/2 + (is[idx+1]);
+					float oy=(is[idx+4]-is[idx+2])/2 + (is[idx+2]);
 					
+					rotate(allarcx, allarcy, -Math.atan(( (is[idx+2]-oy)/(is[idx+1]-ox) ))*180/Math.PI  , idxforarcx+1);
 					
 					transform(allarcx,allarcy, (is[idx+3]-is[idx+1])/2, (is[idx+4]-is[idx+2])/2, idxforarcy+1);
 					xcount[counterxcount]++;
 				}
-				if (idxforarcy>0){
-					idxforarcy--;
+				if (idxforarcy-is[idx+7]>0){
+					idxforarcy-=is[idx+7];
 //					float c=allarcy[idxforarcy]-allarcy[idxforarcy+1];
-					return (Math.round(allarcy[idxforarcy]-allarcy[idxforarcy+1])*is[idx+7]);
+					return Math.round(allarcy[idxforarcy]-allarcy[idxforarcy+is[idx+7]]);
 				}else{
+					
+					xcurr=is[idx+3];
+					ycurr=is[idx+4];
+					is[idx+9]=xcurr;
+					is[idx+10]=ycurr;
+					idx+=8;
+					counterxcount++;
+					
 					return 0;
 				}
+			}else if (is[idx]==MovingFunction.FASTARC){
+				
+				if (xcount[counterxcount]<1){
+					fastarctemp=0;
+					radiusfastarc=getDistance(is[idx+1], is[idx+2], is[idx+3], is[idx+4]);
+					xcount[counterxcount]++;
+					xcurr=is[idx+1];
+					ycurr=is[idx+2];
+				}
+				
+				if (fastarctemp<is[idx+7]){
+					double ft1 = radiusfastarc*Math.cos(fastarctemp)+is[idx+4];
+					double ft = radiusfastarc*Math.cos(fastarctemp-1)+is[idx+4];
+					fastarctemp++;
+					float ret = (float)(ft1-ft);
+					ret+=(0.1*is[idx+6]);
+					ycurr+=ret;
+					return ret;
+				}else{
+					
+					is[idx+9]=xcurr;
+					is[idx+10]=ycurr;
+					idx+=8;
+					counterxcount++;
+					
+					return 0;
+				}
+				
 			}
 			return 0;
 		}
@@ -310,8 +528,8 @@ public class MovingFunction {
 	}
 }
 
-//public static final int STAY = 0;//x1,y1,intisstayforever,timestay(milis)
+//public static final int STAY = 0;//x1,y1,boolstay,timestay
 //public static final int LINE = 1;//x1,y1,x2,y2,speed
 //public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
-//public static final int COMBINE = 4;//all
+//public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+//public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
