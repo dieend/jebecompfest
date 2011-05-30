@@ -47,7 +47,7 @@ public class MovingFunction {
 	
 	
 	////////
-	public static final int bound=10;
+	public static final int bound=4;
 	
 	private static Random random = new Random(System.currentTimeMillis());
 	
@@ -74,9 +74,7 @@ public class MovingFunction {
 		this.bug=bug;
 		idx=2;
 		counterxcount=0;
-		for(int i=0;i<is.length;++i){
-			this.is[i]=is[i];
-		}
+		
 		for(int i=is.length;i<this.is.length;++i){
 			this.is[i]=0;
 		}
@@ -145,6 +143,15 @@ public class MovingFunction {
 			length=8;
 			
 		}else if (moved%bound==3){
+			int speedmoved3=1;
+			if (moved==3){
+				speedmoved3=2;
+			}else if (moved==3+bound){
+				speedmoved3=4;
+			}else if (moved==3+2*bound){
+				speedmoved3=6;
+			}
+			
 			bug.setPosition(50, 50);
 			is[0]=0;
 			is[1]=1;
@@ -154,7 +161,7 @@ public class MovingFunction {
 			is[5]=250;
 			is[6]=100;
 			
-			is[7]=1;//speed
+			is[7]=speedmoved3;//speed
 			
 			is[8]=MovingFunction.LINE;
 			is[9]=0;
@@ -162,7 +169,7 @@ public class MovingFunction {
 			is[11]=50;
 			is[12]=150;
 			
-			is[13]=1;//speed
+			is[13]=speedmoved3;//speed
 			
 			is[14]=MovingFunction.LINE;
 			is[15]=0;
@@ -170,16 +177,57 @@ public class MovingFunction {
 			is[17]=250;
 			is[18]=200;
 			
-			is[19]=1;//speed
+			is[19]=speedmoved3;//speed
 			
-			is[20]=0;
+			is[20]=MovingFunction.LINE;
 			is[21]=0;
-			is[22]=50;
-			is[23]=250;
+			is[22]=0;
+			is[23]=50;
+			is[24]=250;
 			
-			is[24]=1;//speed
+			is[25]=speedmoved3;//speed
 			
-			length=25;
+			is[26]=MovingFunction.LINE;
+			is[27]=0;
+			is[28]=0;
+			is[29]=250;
+			is[30]=300;
+			
+			is[31]=speedmoved3;//speed
+			
+			is[32]=MovingFunction.LINE;
+			is[33]=0;
+			is[34]=0;
+			is[35]=50;
+			is[36]=350;
+			
+			is[37]=speedmoved3;//speed
+			
+			is[38]=MovingFunction.LINE;
+			is[39]=0;
+			is[40]=0;
+			is[41]=250;
+			is[42]=400;
+			
+			is[43]=speedmoved3;//speed
+			
+			is[44]=MovingFunction.LINE;
+			is[45]=0;
+			is[46]=0;
+			is[47]=50;
+			is[48]=450;
+			
+			is[49]=speedmoved3;//speed
+			
+			is[50]=MovingFunction.LINE;
+			is[51]=0;
+			is[52]=0;
+			is[53]=250;
+			is[54]=500;
+			
+			is[55]=speedmoved3;//speed
+			
+			length=56;
 		}
 	}
 	
