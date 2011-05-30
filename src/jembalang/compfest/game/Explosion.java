@@ -10,7 +10,7 @@ public class Explosion implements DrawableObject{
 	public boolean active;
 	private int len;
 	Bitmap[] frameImage;
-	public Explosion(Bitmap[] images,LayerManager host, Rect drawPosition){
+	public Explosion(Bitmap[] images, Rect drawPosition){
 		currentFrame = 0;
 		active = true;
 		frameImage = images;
@@ -30,7 +30,7 @@ public class Explosion implements DrawableObject{
 		}
 	}
 	public static void makeExplosion(Bitmap[] images,LayerManager host, Rect drawPosition){
-		host.append(new Explosion(images, host, drawPosition));
+		host.append(new Explosion(images, drawPosition));
 	}
 	@Override
 	public boolean isActive() {

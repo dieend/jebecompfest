@@ -75,7 +75,7 @@ public class Sprite extends Layer{
 		this.currentFrameIdx = 0;
 		int offsetx = frameWidth/10;
 		int offsety = frameHeight/10;
-		rect = new Rect(x+offsetx, y+offsety, x+frameWidth-offsetx, y+frameHeight-offsety);
+		rect = new Rect(x, y, x+frameWidth, y+frameHeight);
 		refx = rect.centerX();
 		refy = rect.centerY();
 		sequence = new int[images.length];
