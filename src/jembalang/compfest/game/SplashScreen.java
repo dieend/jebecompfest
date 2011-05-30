@@ -2,7 +2,9 @@ package jembalang.compfest.game;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.LinearLayout;
  
 public class SplashScreen extends Activity {
    /** Called when the activity is first created. */
@@ -10,6 +12,10 @@ public class SplashScreen extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.splash);
+      
+      LinearLayout mLayout = (LinearLayout)findViewById(R.id.mLayout);
+      mLayout.setBackgroundColor(0xffffffff);
+   
       Thread splashThread = new Thread() {
          @Override
          public void run() {
