@@ -1,8 +1,10 @@
 package jembalang.compfest.game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,23 +25,35 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	private int gameScore;
 	private int gameHit;
 	private int gameShot;
+	private int bar_width;
+	private int bar_top;
+	private int bar_bottom;
+	private int bar_left;
+	private int bar_right;
 	private float time;
 	private LayerManager layerManager;
 	private Paint paint;
 	private int inscreen;
-	
+	private Random rand;
+
 	public GameThread(Context context) {
 		super(context);
 		paint = new Paint();
 		paint.setColor(Color.RED);
         setOnKeyListener(this);
         //Calculate scale
+        inscreen = 0;
+        rand = new Random(System.currentTimeMillis());
         bug = new ArrayList<Bug>();
-        inscreen = 1;
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay(); 
         width = display.getWidth(); 
         height = display.getHeight();
+        bar_width = width/4 - width/10;
+        bar_left = width-bar_width-width/24;
+        bar_top =height/80;
+        bar_right = bar_left+bar_width;
+        bar_bottom = bar_top+bar_width/6;
         layerManager = new LayerManager();
     }
 	public void start(){
@@ -57,7 +71,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 
 	}
 	private void createbug() {
-		for (int i=0; i<20; i++){
+		for (int i=0; i<40; i++){
 			bug.add(i, Bug.Factory(Bug.BUG1, this));
 		}
 	}
@@ -79,9 +93,9 @@ public class GameThread extends View implements Runnable,OnKeyListener{
         canvas.drawText(""+gameHit+"/"+gameShot, 10, 20, paint);
         paint.setAntiAlias(false);
         paint.setColor(Color.RED);
-        canvas.drawRect(width-60, 4, (width-60)+50, 14, paint);
+        canvas.drawRect(bar_left, bar_top, bar_right, bar_bottom, paint);
         paint.setColor(Color.GREEN);
-        canvas.drawRect(width-60, 4, (width-60)+(player_HP*50/100), 14, paint);
+        canvas.drawRect(bar_left, bar_top, bar_left+(player_HP*bar_width/100), bar_bottom, paint);
         layerManager.draw(canvas);
     }
     public void run() {	
@@ -98,6 +112,9 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     }
     public void updatePhysics() {
     	time +=1;
+    	if (inscreen == 0){
+    		inscreen = rand.nextInt(Math.min(bug.size(),4)); 
+    	}
     	for (int i=0; i<inscreen; i++){
 	    	if (i<bug.size() && bug.get(i)!= null){
 	    		Bug b = bug.get(i);
@@ -112,12 +129,14 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	    			bug.remove(i);
 	    			b.die();
 	    			b = null;
+	    			inscreen--;
 	    		} else {
 		    		if (b.getY() > getViewHeight()){
 		    			player_HP -= b.damage();
 		    			bug.remove(i);
 		    			b.die();
 		    			b = null;
+		    			inscreen--;
 		    		}
 		    	}
 	    	}

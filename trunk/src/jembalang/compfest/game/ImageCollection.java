@@ -45,8 +45,17 @@ public class ImageCollection {
 					tmp = BugDieImageLoader(TYPE_OF_SOURCE);
 				}
 				break;
-				default:
-					break;
+			case IMAGE_WEAPON_EXPLOSION:
+				if (WeaponExplosionImage == null){
+					WeaponExplosionImage = new HashMap<Integer, Bitmap[]>();
+				}
+				tmp =WeaponExplosionImage.get(TYPE_OF_SOURCE);
+				if (tmp==null) {
+					tmp = WeaponExplosionLoader(TYPE_OF_SOURCE);
+				}
+				break;
+			default:
+				break;
 		}
 		return tmp;
 	}
@@ -97,16 +106,27 @@ public class ImageCollection {
 		BugDieImage.put(bugDieType, image);
 		return image;
 	}
+	private Bitmap[] WeaponExplosionLoader(int weaponExplosionType){
+		Bitmap[] image = null;
+		int id = R.drawable.rock;
+		int column=1, row=1;
+		Bitmap tmp=null;
+		if (weaponExplosionType == Weapon.GUN){
+			id = R.drawable.explosion;
+			column = 12;
+			row = 1;
+		}
+		tmp= BitmapFactory.decodeResource(resources, id);
+		image = splitImage(tmp,row,column); 
+		WeaponExplosionImage.put(weaponExplosionType, image);
+		return image;
+	}
 	private Bitmap[] WeaponImageLoader(int weaponType){
 		Bitmap[] image = null;
 		WeaponImage.put(weaponType, image);
 		return image;
 	}
-	private Bitmap[] WeaponExplosionLoader(int weaponExplosionType){
-		Bitmap[] image = null;
-		WeaponExplosionImage.put(weaponExplosionType, image);
-		return image;
-	}
+
 	private Bitmap[] splitImage(Bitmap tmp, int row, int column){
 		Bitmap[] images = null;
 		int height=tmp.getHeight()/row;

@@ -34,7 +34,6 @@ public class Sprite extends Layer{
 		if (visible){
 //			int crow = (sequence[currentFrameIdx]/column) * frameHeight;
 //			int ccol = (sequence[currentFrameIdx]%column) * frameWidth;
-			mat.set(matrix);
 			mat.setRotate(degree);
 			if (mirror){
 				mat.postConcat(matrixMirror);
