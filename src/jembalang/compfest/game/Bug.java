@@ -35,7 +35,6 @@ public class Bug extends Sprite {
 	}
 	public static Bug Factory(int bugType, GameThread host){
 		Bug tmp = new Bug(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG, bugType), host);
-		
 		if (bugType == TYPE1){
 			tmp.maxHP = 20;
 			tmp.HP = tmp.maxHP;
