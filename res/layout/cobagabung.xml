@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res/jembalang.comfest.game"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-  <jembalang.compfest.game.GameThread
-  	android:id="@+id/game_view"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-  </jembalang.compfest.game.GameThread>
-  <Button 
-  	android:text="Button" 
-  	android:id="@+id/button1" 
-  	android:layout_width="wrap_content" 
-  	android:layout_height="wrap_content">
-  </Button>
-  
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res/jembalang.comfest.game"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	
+	<jembalang.compfest.game.GameThread
+		android:id="@+id/game_view" android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+	</jembalang.compfest.game.GameThread>
+
+	<TableRow android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:gravity="bottom|center_horizontal">
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:src="@drawable/larrow"
+			android:id="@+id/img_larrow" />
+		<ImageView android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:src="@drawable/ak47"
+			android:id="@+id/img_ak47" />
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:src="@drawable/rarrow"
+			android:id="@+id/img_rarrow" />
+	</TableRow>
+
 </merge>

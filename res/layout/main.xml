@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-
-	<TableRow android:gravity="center" android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-		<Button android:id="@+id/newgame" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:text="Play" />
-	</TableRow>
-
+	android:layout_height="fill_parent" android:gravity="center_vertical">
+<Button android:id="@+id/newgame_btn" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Play" />
+	<Button android:id="@+id/setting_btn" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Setting" />
 
 </LinearLayout>
 
