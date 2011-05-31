@@ -42,8 +42,8 @@ public class Explosion implements DrawableObject{
 		if (timed){
 			if (time > 0){
 				canvas.drawBitmap(frameImage[currentFrame], null, drawPosition, null);
-				currentFrame++;
-				currentFrame = currentFrame % len;
+				if (currentFrame<len)
+					currentFrame++;
 				time--;
 			} else {
 				active = false;

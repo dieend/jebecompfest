@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -35,6 +36,28 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	private int inscreen;
 	private Random rand;
 	private RectF fire;
+	
+	public GameThread(Context context,AttributeSet attr){
+		super(context, attr);
+		fire = new RectF();
+		paint = new Paint();
+		paint.setColor(Color.RED);
+        setOnKeyListener(this);
+        //Calculate scale
+        inscreen = 0;
+        rand = new Random(System.currentTimeMillis());
+        bug = new ArrayList<Bug>();
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay(); 
+        width = display.getWidth(); 
+        height = display.getHeight();
+        bar_width = width/4 - width/10;
+        bar_left = width-bar_width-width/24;
+        bar_top =height/80;
+        bar_right = bar_left+bar_width;
+        bar_bottom = bar_top+bar_width/6;
+        layerManager = new LayerManager();
+	}
 	public GameThread(Context context) {
 		super(context);
 		fire = new RectF();
