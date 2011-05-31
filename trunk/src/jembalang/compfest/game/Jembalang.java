@@ -18,8 +18,8 @@ public class Jembalang extends Activity {
         button.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-		        gameView = new GameThread(Jembalang.this);
-		        setContentView(gameView);
+				setContentView(R.layout.cobagabung);
+				gameView = (GameThread) Jembalang.this.findViewById(R.id.game_view);
 		        gameView.setFocusable(true);
 		        gameView.setFocusableInTouchMode(true);
 		        gameView.start();
