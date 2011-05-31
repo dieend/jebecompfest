@@ -2,15 +2,13 @@ package jembalang.compfest.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.RectF;
 public class Sprite extends Layer{
 	
 	
-	private int frameHeight;
-	private int frameWidth;
-	private int[] sequence;
-	private int currentFrameIdx;
-	private Bitmap[] images;
+	protected int[] sequence;
+	protected int currentFrameIdx;
+	protected Bitmap[] images;
 	/**
 	 * Sprite constructor. column is the number of sprite frame column in the image, so is the height
 	 * The Bitmap image should have Bitmap.Config.ARGB_8888 if possible.
@@ -57,7 +55,7 @@ public class Sprite extends Layer{
 	 */
 	@Override
 	public int getHeight(){
-		return frameHeight;
+		return images[0].getHeight();
 	}
 	
 	/**
@@ -66,21 +64,17 @@ public class Sprite extends Layer{
 	 */
 	@Override
 	public int getWidth(){
-		return frameWidth; 
+		return images[0].getWidth(); 
 	}
 	private void init() {
-		this.frameWidth = images[0].getWidth();
-		this.frameHeight = images[0].getHeight();
-		this.currentFrameIdx = 0;
-		int offsetx = frameWidth/10;
-		int offsety = frameHeight/10;
-		rect = new Rect(x, y, x+frameWidth, y+frameHeight);
-		refx = rect.centerX();
-		refy = rect.centerY();
 		sequence = new int[images.length];
 		for (int i = 0; i<sequence.length; i++){
 			sequence[i] = i;
 		}
+		this.currentFrameIdx = 0;
+		rect = new RectF(x, y, x+getWidth(), y+getHeight());
+		refx = (int)rect.centerX();
+		refy = (int)rect.centerY();
 	}
 	
 	/**

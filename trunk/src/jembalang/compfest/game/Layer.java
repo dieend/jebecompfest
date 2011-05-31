@@ -2,24 +2,23 @@ package jembalang.compfest.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.RectF;
 
 public class Layer implements DrawableObject{
 	protected boolean visible;
 	
 	private Bitmap image;
 	protected boolean tinted;
-	protected int x;
-	protected int y;
+	protected float x;
+	protected float y;
 	protected int tintTime;
 	protected Paint paint;
 	protected Matrix matrixMirror;
 	protected Matrix mat;
 	protected boolean mirror;
-	protected Rect rect;
+	protected RectF rect;
 	protected int refx;
 	protected int refy;
 	protected Bitmap b;
@@ -45,7 +44,11 @@ public class Layer implements DrawableObject{
 		 };
 		 matrixMirror = new Matrix();
 		 matrixMirror.setValues(mirrorY);
-		rect = new Rect(getX(), getY(), getX()+getWidth(), getY()+getHeight());
+		 if (this instanceof Sprite){
+			 rect = new RectF();
+		 } else {
+			 rect = new RectF(getX(), getY(), getX()+getWidth(), getY()+getHeight());
+		 }
 		visible = true;
 		refx = 0;
 		refy = 0;
@@ -54,14 +57,14 @@ public class Layer implements DrawableObject{
 	 * return sprite position x;
 	 * @return x
 	 */
-	public int getX(){
+	public float getX(){
 		return x;
 	}
 	/**
 	 * return sprite position y
 	 * @return y;
 	 */
-	public int getY(){
+	public float getY(){
 		return y;
 	}
 	public int getWidth() {
@@ -94,7 +97,7 @@ public class Layer implements DrawableObject{
 	 * @return
 	 */
 	public boolean collideWith(Layer s){
-		return Rect.intersects(this.getRectangle(), s.getRectangle());
+		return RectF.intersects(this.getRectangle(), s.getRectangle());
 	}
 	public boolean collideWith(int x, int y){
 		return getRectangle().contains(x, y);
@@ -115,7 +118,7 @@ public class Layer implements DrawableObject{
 	 * return the bounds of the sprite
 	 * @return rectangle bounding the sprite
 	 */
-	public Rect getRectangle(){
+	public RectF getRectangle(){
 		rect.offsetTo(x, y);
 		return rect;
 	}
@@ -150,13 +153,13 @@ public class Layer implements DrawableObject{
 	 * @param color color
 	 * @param tintTime how long the image will be tinted
 	 */
-	public void setTint(int color,int tintTime){
-		tinted = true;
-		this.tintTime = tintTime;
-		paint = new Paint();
-		paint.setColor(color);
-		paint.setColorFilter(new LightingColorFilter(color, 1));
-	}
+//	public void setTint(int color,int tintTime){
+//		tinted = true;
+//		this.tintTime = tintTime;
+//		paint = new Paint();
+//		paint.setColor(color);
+//		paint.setColorFilter(new LightingColorFilter(color, 1));
+//	}
 	/**
 	 * untint the image
 	 */

@@ -36,14 +36,5 @@ public class LayerManager {
 	    
 	}
 
-//
-//		for (int i=layers.size()-1; i>=0; i--){
-//			DrawableObject d = layers.elementAt(i);
-//			if (!d.isActive()){
-//				layers.removeElementAt(i);
-//			} else {
-//				d.draw(canvas);
-//			}
-//		}
 }
 

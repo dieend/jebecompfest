@@ -12,6 +12,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<activity android:name="Jembalang"></activity>
+		<activity android:name="Jembalang" android:screenOrientation="portrait"></activity>
     </application>
 </manifest>
