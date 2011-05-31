@@ -2,26 +2,47 @@ package jembalang.compfest.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 public class Weapon {
 	private int bullet;
 	private int base_damage;
-	private Rect area;
+	private RectF area;
 	private int type;
 	private int buff;
 	private static int currentWeapon;
 	private static List<Weapon> weaponList;
 	private int ttint;
 	private int tint;
-	public static final int GUN = 0;
-	public static final int BUFF_NO = 0;
 	private static GameThread host;
+	
+	public static final int GUN = 0;
+	public static final int SLOWER = 1;
+	public static final int BUFF_NO = 0;
+	public static final int BUFF_FREEZE = 1;
+
+	private Weapon(int type){
+		this.type = type;
+		if (type == GUN){
+			area = new RectF(0,0,15,15);
+			base_damage = 20;
+			buff = BUFF_NO;
+			bullet = -1;
+			ttint = 10;
+			tint = Color.RED;
+		} else if (type == SLOWER) {
+			area = new RectF(0,0,40,40);
+			base_damage = 10;
+			buff = BUFF_FREEZE;
+			bullet = 10;
+			ttint = 100;
+			tint = Color.BLUE;
+		}
+	}
 	
 	
 	public static void init(GameThread h,int...weaponTypes) {
@@ -50,17 +71,6 @@ public class Weapon {
 	public static void prevWeapon() {
 		currentWeapon = (currentWeapon - 1) % weaponList.size();
 	}
-	private Weapon(int type){
-		this.type = type;
-		if (type == GUN){
-			area = new Rect(0,0,15,15);
-			base_damage = 20;
-			buff = BUFF_NO;
-			bullet = -1;
-			ttint = 10;
-			tint = Color.RED;
-		}
-	}
 	public int buffType() {
 		return buff;
 	}
@@ -74,44 +84,46 @@ public class Weapon {
 			}
 		}
 		if (!found){
-			if (type == GUN){
-				Weapon wp;
-				wp = new Weapon(type);
-				weaponList.add(wp);
-				ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type);
-			}
+			Weapon wp;
+			wp = new Weapon(type);
+			weaponList.add(wp);
+			ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type);	
 		}
 	}
 	public void setFire(int x, int y){
-		if (bullet > 0 || bullet == -1){
-			if (bullet>0) bullet -= 1;
-			x -= (area.width()/2);
-			y -= (area.height()/2);
-			area.offsetTo(x, y);
-			Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type), 
-					host.getLayerManager(), area);
-		}
+	
+		if (bullet>0) bullet -= 1;
+		x -= (area.width()/2);
+		y -= (area.height()/2);
+		area.offsetTo(x, y);
+		Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type), 
+				host.getLayerManager(), area);
+	}
+	public boolean noBullet() {
+		if (bullet > 0 || bullet == -1)
+			return false;
+		else return true;
 	}
 	public void setFire(float x, float y){
 		setFire((int) x, (int) y);
 	}
-	public int getDamage(Rect enemy, int[] score){
+	public int getDamage(RectF enemy, int[] score){
 		int damage = 0;
-		Rect k = new Rect();
-		int a = countArea(getArea());
-		int e = countArea(enemy);
+		RectF k = new RectF();
+		float a = countArea(getArea());
+		float e = countArea(enemy);
 		if (k.setIntersect(getArea(), enemy)) {
-			int i = countArea(k);
-			damage = (i * base_damage/Math.min(e,a));
-			score[0] = score[0] * i / a;
+			float i = countArea(k);
+			damage = (int) (i * base_damage/Math.min(e,a));
+			score[0] = (int) (score[0] * i / a);
 		}
 		return damage;
 	}
 	
-	public static int countArea(Rect a){
-		return ((a.right-a.left) * (a.bottom-a.top));
+	public static float countArea(RectF a){
+		return ((a.width()) * (a.height()));
 	}
-	public Rect getArea(){
+	public RectF getArea(){
 		return area;
 	}
 	public int bulletRemaining(){

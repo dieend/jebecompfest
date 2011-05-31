@@ -34,10 +34,10 @@ public class MovingFunction {
 		return b;
 	}
 	
-	private int[]is = new int[3000];
-	private int length=0;
-	private int xcurr;
-	private int ycurr;
+	private float[]is = new float[3000];
+	private float length=0;
+	private float xcurr;
+	private float ycurr;
 	
 	public void setStatus(int status){
 		is[0]=status;
@@ -596,7 +596,7 @@ public class MovingFunction {
 					if (is[idx+4]>0){
 
 						try {
-							Thread.sleep(is[idx+4]);
+							Thread.sleep((int)is[idx+4]);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -618,11 +618,11 @@ public class MovingFunction {
 				if (xcount[counterxcount]<1){
 					x1lessx2=(is[idx+1]<=is[idx+3]);
 					y1lessy2=(is[idx+2]<=is[idx+4]);
-					int nextx=is[idx+3]-is[idx+1];
-					int nexty=is[idx+4]-is[idx+2];
-					int divider = gcd((int)Math.abs(nextx), (int)Math.abs(nexty));
-					nextxx=(nextx*is[idx+5])/divider;
-					nextyy=(nexty*is[idx+5])/divider;
+					float nextx=is[idx+3]-is[idx+1];
+					float nexty=is[idx+4]-is[idx+2];
+					float divider = gcd((int)Math.abs(nextx), (int)Math.abs(nexty));
+					nextxx=(int)((nextx*is[idx+5])/divider);
+					nextyy=(int)((nexty*is[idx+5])/divider);
 					xcount[counterxcount]++;
 				}
 				if (x1lessx2){
@@ -655,7 +655,7 @@ public class MovingFunction {
 					float temp=getDistance(is[idx+1], is[idx+2], is[idx+3], is[idx+4]);
 					idxforarcx=(int)temp;
 					idxforarcy=(int)temp;
-					generateNextArc(temp/2, is[idx+5], is[idx+6]);
+					generateNextArc(temp/2, is[idx+5], (int)is[idx+6]);
 					float b=allarcx[0];
 					b=allarcy[0];
 					
@@ -664,13 +664,13 @@ public class MovingFunction {
 					
 					rotate(allarcx, allarcy, -Math.atan(( (is[idx+2]-oy)/(is[idx+1]-ox) ))*180/Math.PI  , idxforarcx+1);
 					
-					transform(allarcx,allarcy, (is[idx+3]-is[idx+1])/2, (is[idx+4]-is[idx+2])/2, idxforarcx+1);
+					transform(allarcx,allarcy, (int)(is[idx+3]-is[idx+1])/2, (int)(is[idx+4]-is[idx+2])/2, (int)idxforarcx+1);
 					xcount[counterxcount]++;
 				}
 				if (idxforarcx-is[idx+7]>0){
 					idxforarcx-=is[idx+7];
 //					float c=(allarcx[idxforarcx]-allarcx[idxforarcx+1]);
-					return Math.round(allarcx[idxforarcx]-allarcx[idxforarcx+is[idx+7]]);
+					return Math.round(allarcx[idxforarcx]-allarcx[(int)idxforarcx+(int)is[idx+7]]);
 				}else{
 					
 					xcurr=is[idx+3];
@@ -734,7 +734,7 @@ public class MovingFunction {
 					if (is[idx+4]>0){
 						
 						try {
-							Thread.sleep(is[idx+4]);
+							Thread.sleep((int)is[idx+4]);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -756,11 +756,11 @@ public class MovingFunction {
 				if (xcount[counterxcount]<1){
 					x1lessx2=(is[idx+1]<=is[idx+3]);
 					y1lessy2=(is[idx+2]<=is[idx+4]);
-					int nextx=is[idx+3]-is[idx+1];
-					int nexty=is[idx+4]-is[idx+2];
-					int divider = gcd((int)Math.abs(nextx), (int)Math.abs(nexty));
-					nextxx=(nextx*is[idx+5])/divider;
-					nextyy=(nexty*is[idx+5])/divider;
+					float nextx=is[idx+3]-is[idx+1];
+					float nexty=is[idx+4]-is[idx+2];
+					float divider = gcd((int)Math.abs(nextx), (int)Math.abs(nexty));
+					nextxx=(int)((nextx*is[idx+5])/divider);
+					nextyy=(int)((nexty*is[idx+5])/divider);
 					xcount[counterxcount]++;
 				}
 				
@@ -794,7 +794,7 @@ public class MovingFunction {
 					float temp=getDistance(is[idx+1], is[idx+2], is[idx+3], is[idx+4]);
 					idxforarcx=(int)temp;
 					idxforarcy=(int)temp;
-					generateNextArc(temp/2, is[idx+5], is[idx+6]);
+					generateNextArc(temp/2, is[idx+5], (int)is[idx+6]);
 					float b=allarcx[0];
 					b=allarcy[0];
 					
@@ -803,13 +803,13 @@ public class MovingFunction {
 					
 					rotate(allarcx, allarcy, -Math.atan(( (is[idx+2]-oy)/(is[idx+1]-ox) ))*180/Math.PI  , idxforarcx+1);
 					
-					transform(allarcx,allarcy, (is[idx+3]-is[idx+1])/2, (is[idx+4]-is[idx+2])/2, idxforarcy+1);
+					transform(allarcx,allarcy, (int)(is[idx+3]-is[idx+1])/2, (int)(is[idx+4]-is[idx+2])/2, (int)idxforarcy+1);
 					xcount[counterxcount]++;
 				}
 				if (idxforarcy-is[idx+7]>0){
 					idxforarcy-=is[idx+7];
 //					float c=allarcy[idxforarcy]-allarcy[idxforarcy+1];
-					return Math.round(allarcy[idxforarcy]-allarcy[idxforarcy+is[idx+7]]);
+					return Math.round(allarcy[idxforarcy]-allarcy[idxforarcy+(int)is[idx+7]]);
 				}else{
 					
 					xcurr=is[idx+3];

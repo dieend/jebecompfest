@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -35,9 +34,10 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	private Paint paint;
 	private int inscreen;
 	private Random rand;
-
+	private RectF fire;
 	public GameThread(Context context) {
 		super(context);
+		fire = new RectF();
 		paint = new Paint();
 		paint.setColor(Color.RED);
         setOnKeyListener(this);
@@ -65,7 +65,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 		gameScore = 0;
 		gameHit = 0;
 		gameShot = 0;
-		Weapon.init(this, Weapon.GUN);
+		Weapon.init(this, Weapon.SLOWER);
 		time = 0;
 		((Thread)new Thread(this)).start();
 
@@ -85,7 +85,8 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	@Override
     protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		paint.setColor(Color.WHITE); 
+		paint.setColor(Color.WHITE);
+		canvas.drawPaint(paint);
 		paint.setTextSize(10);
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
@@ -97,6 +98,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
         paint.setColor(Color.GREEN);
         canvas.drawRect(bar_left, bar_top, bar_left+(player_HP*bar_width/100), bar_bottom, paint);
         layerManager.draw(canvas);
+//        canvas.drawRect(fire, paint);
     }
     public void run() {	
     	while (active){
@@ -125,7 +127,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	    		b.update(time);
 	    		if (!b.isAlive()){
 	    			Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG_DIE, b.getType())
-	    									,layerManager, b.getRectangle(),10);
+	    									,layerManager, b.getRectangle());
 	    			bug.remove(i);
 	    			b.die();
 	    			b = null;
@@ -145,7 +147,9 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		if (event.getAction() == MotionEvent.ACTION_DOWN){
+			if (Weapon.take().noBullet())return true;
 			Weapon.take().setFire(event.getRawX(), event.getRawY());
+//			fire = Weapon.take().getArea();
 			gameShot += 1;
 			boolean[] hit = new boolean[1];
 			for (Bug b:bug){

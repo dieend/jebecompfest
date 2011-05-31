@@ -74,8 +74,8 @@ public class ImageCollection {
 			row = 1;
 		} else if (bugType == Bug.BUG1){
 			id = R.drawable.bug;
-			column = 1;
-			row = 1;
+			column = 3;
+			row = 4;
 		}
 		tmp= BitmapFactory.decodeResource(resources, id);
 		image = splitImage(tmp,row,column);
@@ -98,7 +98,7 @@ public class ImageCollection {
 			row = 1;
 		} else if (bugDieType == Bug.BUG1){
 			id = R.drawable.bugdie;
-			column = 1;
+			column = 3;
 			row = 1;
 		}
 		tmp= BitmapFactory.decodeResource(resources, id);
@@ -113,6 +113,10 @@ public class ImageCollection {
 		Bitmap tmp=null;
 		if (weaponExplosionType == Weapon.GUN){
 			id = R.drawable.explosion;
+			column = 12;
+			row = 1;
+		} else if (weaponExplosionType == Weapon.SLOWER){
+			id = R.drawable.freezer;
 			column = 12;
 			row = 1;
 		}
