@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
 public class Weapon {
+	/*
+	 * how to add a new Weapon:
+	 * - Add constant BUFF (if it have any) and WEAPONTYPE
+	 * - Add the constructor at Weapon(int type), just copy the previous and edit
+	 * - Define weapon image explosion at ImageCollection
+	 * - Define the buff effect at bug.hit()
+	 */
 	private int bullet;
 	private int base_damage;
 	private RectF area;
@@ -22,13 +28,15 @@ public class Weapon {
 	
 	public static final int GUN = 0;
 	public static final int SLOWER = 1;
+	public static final int BURNER = 2;
 	public static final int BUFF_NO = 0;
 	public static final int BUFF_FREEZE = 1;
+	public static final int BUFF_PARALYZED= 1;
 
 	private Weapon(int type){
 		this.type = type;
 		if (type == GUN){
-			area = new RectF(0,0,15,15);
+			area = new RectF(0,0,20,20);
 			base_damage = 20;
 			buff = BUFF_NO;
 			bullet = -1;
@@ -41,6 +49,13 @@ public class Weapon {
 			bullet = 10;
 			ttint = 100;
 			tint = Color.BLUE;
+		} else if (type == BURNER){
+			area = new RectF(0,0,10,10);
+			base_damage = 50;
+			buff = BUFF_PARALYZED;
+			bullet = 10;
+			ttint = 20;
+			tint = Color.YELLOW;
 		}
 	}
 	
