@@ -21,11 +21,12 @@ public final class R {
         public static final int grass=0x7f020007;
         public static final int icon=0x7f020008;
         public static final int larrow=0x7f020009;
-        public static final int mrsmith=0x7f02000a;
-        public static final int rarrow=0x7f02000b;
-        public static final int rock=0x7f02000c;
-        public static final int splash=0x7f02000d;
-        public static final int sword=0x7f02000e;
+        public static final int laser=0x7f02000a;
+        public static final int mrsmith=0x7f02000b;
+        public static final int rarrow=0x7f02000c;
+        public static final int rock=0x7f02000d;
+        public static final int splash=0x7f02000e;
+        public static final int sword=0x7f02000f;
     }
     public static final class id {
         public static final int ImageView01=0x7f050007;

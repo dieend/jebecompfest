@@ -88,7 +88,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 		gameScore = 0;
 		gameHit = 0;
 		gameShot = 0;
-		Weapon.init(this, Weapon.SLOWER);
+		Weapon.init(this, Weapon.BURNER);
 		time = 0;
 		((Thread)new Thread(this)).start();
 
@@ -109,7 +109,6 @@ public class GameThread extends View implements Runnable,OnKeyListener{
     protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		paint.setColor(Color.WHITE);
-		canvas.drawPaint(paint);
 		paint.setTextSize(10);
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
@@ -150,7 +149,7 @@ public class GameThread extends View implements Runnable,OnKeyListener{
 	    		b.update(time);
 	    		if (!b.isAlive()){
 	    			Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_BUG_DIE, b.getType())
-	    									,layerManager, b.getRectangle());
+	    									,layerManager, b.getRectangle(),12);
 	    			bug.remove(i);
 	    			b.die();
 	    			b = null;

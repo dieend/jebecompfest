@@ -119,6 +119,10 @@ public class ImageCollection {
 			id = R.drawable.freezer;
 			column = 12;
 			row = 1;
+		} else if (weaponExplosionType == Weapon.BURNER){
+			id = R.drawable.laser;
+			column = 10;
+			row = 1;
 		}
 		tmp= BitmapFactory.decodeResource(resources, id);
 		image = splitImage(tmp,row,column); 

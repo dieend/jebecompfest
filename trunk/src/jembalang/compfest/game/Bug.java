@@ -75,6 +75,9 @@ public class Bug extends Sprite {
 		if (buff == Weapon.BUFF_FREEZE&& tintTime > 0){
 			dx *= 0.2;
 			dy *= 0.2;
+		} else if (buff == Weapon.BUFF_PARALYZED && tintTime > 0){
+			dx = 0;
+			dy = 0;
 		}
 		move(dx, dy);
 		nextFrame();
@@ -118,6 +121,8 @@ public class Bug extends Sprite {
 				HP-=d;
 				if (weapon.buffType() == Weapon.BUFF_FREEZE){
 					setTint(FREEZING,weapon.tintTime());
+				} else if (weapon.buffType() == weapon.BUFF_PARALYZED){
+					setTint(BURNING, weapon.tintTime());
 				}
 			}
 			buff = weapon.buffType();
