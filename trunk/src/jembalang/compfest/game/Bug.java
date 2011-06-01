@@ -19,6 +19,9 @@ public class Bug extends Sprite {
 	private int base_score;
 	private int type;
 	private int buff;
+	private boolean smalling;
+	private boolean bigging;
+	private float currentSize;
 	public static final int TYPE1 = 0;
 	public static final int BIRD= 1;
 	public static final int BUG1 = 2;
@@ -50,10 +53,12 @@ public class Bug extends Sprite {
 			tmp.setFunction(null);
 			tmp.base_score = 100;;
 			tmp.setSequence(NORMAL);
+			tmp.smalling = true;	
 		}
 		tmp.visible = false;
 		tmp.paint = new Paint();
 		tmp.type = bugType;
+		tmp.currentSize = 1F;
 		return tmp;
 	}
 	private Bug(Bitmap[] images, GameThread host){
@@ -90,6 +95,19 @@ public class Bug extends Sprite {
 			if (mirror){
 				mat.postConcat(matrixMirror);
 			}
+			if (smalling){
+				currentSize = (currentSize*0.9F);
+				if (smalling && Math.abs(currentSize)<0.01F){
+					smalling = false;
+				}
+			}
+			if (bigging){
+				currentSize = (currentSize*10F/9F);
+				if (bigging && Math.abs(currentSize-1F)<0.01F) {
+					bigging = false;
+				}
+			}
+			mat.postScale(currentSize, currentSize);
 			b = Bitmap.createBitmap(images[sequence[currentFrameIdx]], 0, 0, getWidth(), getHeight(), mat,true);
 			if (tinted || tintTime >0){
 				tintTime-=1;
@@ -121,7 +139,7 @@ public class Bug extends Sprite {
 				HP-=d;
 				if (weapon.buffType() == Weapon.BUFF_FREEZE){
 					setTint(FREEZING,weapon.tintTime());
-				} else if (weapon.buffType() == weapon.BUFF_PARALYZED){
+				} else if (weapon.buffType() == Weapon.BUFF_PARALYZED){
 					setTint(BURNING, weapon.tintTime());
 				}
 			}
@@ -139,5 +157,12 @@ public class Bug extends Sprite {
 		tinted = true;
 		this.tintTime = tintTime;
 		setSequence(sequence);
+	}
+	public void setSmaller(){
+		smalling = true;
+	}
+	public void setBigger() {
+		smalling = false;
+		bigging = true;
 	}
 }

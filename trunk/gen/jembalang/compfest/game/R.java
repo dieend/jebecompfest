@@ -27,6 +27,7 @@ public final class R {
         public static final int rock=0x7f02000d;
         public static final int splash=0x7f02000e;
         public static final int sword=0x7f02000f;
+        public static final int target=0x7f020010;
     }
     public static final class id {
         public static final int ImageView01=0x7f060009;
