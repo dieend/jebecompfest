@@ -2,6 +2,8 @@ package jembalang.compfest.game;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -94,7 +96,7 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 		gameScore = 0;
 		gameHit = 0;
 		gameShot = 0;
-		Weapon.init(this, Weapon.BURNER);
+		Weapon.init(this, Weapon.RUDAL);
 		time = 0;
 		((Thread) new Thread(this)).start();
 
@@ -183,24 +185,31 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (Weapon.take().noBullet())
+			if (Weapon.take().noBullet() || Weapon.active)
 				return true;
 			Weapon.take().setFire(event.getRawX(), event.getRawY());
 			// fire = Weapon.take().getArea();
-			gameShot += 1;
-			boolean[] hit = new boolean[1];
-			for (Bug b : bug) {
-				if (b != null && b.visible) {
-					gameScore += b.hit(Weapon.take(), hit);
-					if (hit[0]) {
-						gameHit += 1;
+			Timer t = new Timer();
+			t.schedule(new TimerTask() {
+				
+				@Override
+				public void run() {
+					gameShot += 1;
+					Weapon.active=false;
+					boolean[] hit = new boolean[1];
+					for (Bug b : bug) {
+						if (b != null && b.visible) {
+							gameScore += b.hit(Weapon.take(), hit);
+							if (hit[0]) {
+								gameHit += 1;
+							}
+						}
 					}
 				}
-			}
+			}, Weapon.take().delay());
 		}
 		return true;
 	}
-
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		return false;
 	}

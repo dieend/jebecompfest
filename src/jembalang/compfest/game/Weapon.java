@@ -20,15 +20,17 @@ public class Weapon {
 	private RectF area;
 	private int type;
 	private int buff;
+	private int delay;
 	private static int currentWeapon;
 	private static List<Weapon> weaponList;
 	private int ttint;
 	private int tint;
 	private static GameThread host;
-	
+	public static boolean active; 
 	public static final int GUN = 0;
 	public static final int SLOWER = 1;
 	public static final int BURNER = 2;
+	public static final int RUDAL = 3;
 	public static final int BUFF_NO = 0;
 	public static final int BUFF_FREEZE = 1;
 	public static final int BUFF_PARALYZED= 2;
@@ -42,6 +44,7 @@ public class Weapon {
 			bullet = -1;
 			ttint = 10;
 			tint = Color.RED;
+			delay = 0;
 		} else if (type == SLOWER) {
 			area = new RectF(0,0,40,40);
 			base_damage = 10;
@@ -49,13 +52,23 @@ public class Weapon {
 			bullet = 10;
 			ttint = 100;
 			tint = Color.BLUE;
+			delay = 0;
 		} else if (type == BURNER){
 			area = new RectF(0,0,10,10);
-			base_damage = 10;
+			base_damage = 50;
 			buff = BUFF_PARALYZED;
 			bullet = 10;
 			ttint = 20;
 			tint = Color.YELLOW;
+			delay = 10;
+		} else if (type == RUDAL){
+			area = new RectF(0,0,240,320);
+			base_damage = 100;
+			buff = BUFF_NO;
+			bullet = -1;
+			ttint = 10;
+			tint = Color.RED;
+			delay = 3000;
 		}
 	}
 	
@@ -68,6 +81,7 @@ public class Weapon {
 			for(int type: weaponTypes){
 				Weapon.Factory(type);
 			}
+			active = false;
 		}
 	}
 	public static Weapon take(){
@@ -106,13 +120,13 @@ public class Weapon {
 		}
 	}
 	public void setFire(int x, int y){
-	
 		if (bullet>0) bullet -= 1;
 		x -= (area.width()/2);
 		y -= (area.height()/2);
 		area.offsetTo(x, y);
 		Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type), 
 				host.getLayerManager(), area);
+		active = true;
 	}
 	public boolean noBullet() {
 		if (bullet > 0 || bullet == -1)
@@ -153,4 +167,8 @@ public class Weapon {
 	public int tintTime(){
 		return ttint;
 	}
+	public int delay(){
+		return delay;
+	}
+	
 }

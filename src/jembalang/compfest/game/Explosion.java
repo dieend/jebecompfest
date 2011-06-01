@@ -39,8 +39,8 @@ public class Explosion implements DrawableObject{
 	}
 	@Override
 	public void draw(Canvas canvas) {
-		if (timed){
-			if (time > 0){
+		if (timed || Weapon.active){
+			if (time > 0 || Weapon.active){
 				canvas.drawBitmap(frameImage[currentFrame], null, drawPosition, null);
 				if (currentFrame<len-1)
 					currentFrame++;
