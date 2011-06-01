@@ -8,16 +8,6 @@
 		android:layout_height="fill_parent">
 	</jembalang.compfest.game.GameThread>
 
-	<Button android:id="@+id/resume_btn" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="Resume"
-		android:visibility="invisible" />
-	<Button android:id="@+id/setting_btn" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="Setting"
-		android:visibility="invisible" />
-	<Button android:id="@+id/exit_btn" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="Exit"
-		android:visibility="invisible" />
-
 	<TableRow android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:gravity="bottom|center_horizontal">
 		<ImageView android:layout_width="wrap_content"
@@ -25,7 +15,7 @@
 			android:id="@+id/img_larrow" />
 		<ImageView android:layout_height="wrap_content"
 			android:layout_width="wrap_content" android:src="@drawable/ak47"
-			android:id="@+id/img_ak47" />
+			android:id="@+id/img_weapon" />
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:src="@drawable/rarrow"
 			android:id="@+id/img_rarrow" />

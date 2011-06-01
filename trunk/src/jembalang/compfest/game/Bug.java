@@ -59,6 +59,8 @@ public class Bug extends Sprite {
 		tmp.paint = new Paint();
 		tmp.type = bugType;
 		tmp.currentSize = 1F;
+		tmp.smalling = false;
+		tmp.bigging = false;
 		return tmp;
 	}
 	private Bug(Bitmap[] images, GameThread host){

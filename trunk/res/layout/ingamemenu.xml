@@ -7,6 +7,9 @@
 		android:layout_height="wrap_content" android:text="Resume" />
 	<Button android:id="@+id/setting_btn" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="Setting" />
+	<Button android:id="@+id/backtomainmenu_btn"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:text="Back to main menu" />
 	<Button android:id="@+id/exit_btn" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="Exit" />
 
