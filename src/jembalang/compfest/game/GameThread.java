@@ -208,4 +208,11 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 	public LayerManager getLayerManager() {
 		return layerManager;
 	}
+	public void pause() {
+		active = false;
+	}
+	public void resume() {
+		active = true;
+		((Thread) new Thread(this)).start();
+	}
 }

@@ -31,7 +31,7 @@ public class Weapon {
 	public static final int BURNER = 2;
 	public static final int BUFF_NO = 0;
 	public static final int BUFF_FREEZE = 1;
-	public static final int BUFF_PARALYZED= 1;
+	public static final int BUFF_PARALYZED= 2;
 
 	private Weapon(int type){
 		this.type = type;
@@ -51,7 +51,7 @@ public class Weapon {
 			tint = Color.BLUE;
 		} else if (type == BURNER){
 			area = new RectF(0,0,10,10);
-			base_damage = 50;
+			base_damage = 10;
 			buff = BUFF_PARALYZED;
 			bullet = 10;
 			ttint = 20;
