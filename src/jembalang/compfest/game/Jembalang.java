@@ -2,11 +2,13 @@ package jembalang.compfest.game;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Jembalang extends Activity implements OnClickListener {
@@ -20,7 +22,7 @@ public class Jembalang extends Activity implements OnClickListener {
 		super.onKeyDown(keyCode, event);
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			if (gameView != null){
+			if (gameView != null) {
 				gameView.pause();
 				dialog.show();
 				return true;
@@ -34,23 +36,34 @@ public class Jembalang extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
+		setContentView(R.layout.gameplay);
+		gameView = (GameThread) Jembalang.this.findViewById(R.id.game_view);
+		gameView.setFocusable(true);
+		gameView.setFocusableInTouchMode(true);
+		gameView.start();
+		
 		dialog = new Dialog(this);
 		dialog.setContentView(R.layout.ingamemenu);
 		dialog.setTitle("Game Paused");
 		dialog.setCancelable(false);
+		
+		Button resume_btn = (Button) dialog.findViewById(R.id.resume_btn);
+		Button setting_btn = (Button) dialog
+				.findViewById(R.id.setting_btn);
+		Button backtomainmenu_btn = (Button) dialog
+				.findViewById(R.id.backtomainmenu_btn);
+		Button exit_btn = (Button) dialog.findViewById(R.id.exit_btn);
+		ImageView nextweapon_btn = (ImageView) findViewById(R.id.img_larrow);
+		ImageView prevweapon_btn = (ImageView) findViewById(R.id.img_rarrow);
+		// TODO implements weapon image change
+		ImageView weapon_img = (ImageView) findViewById(R.id.img_weapon);
 
-		Button newgame_btn = (Button)findViewById(R.id.newgame_btn);
-		Button resume_btn = (Button)dialog.findViewById(R.id.resume_btn);
-		Button setting_btn = (Button)dialog.findViewById(R.id.setting_btn);
-		Button exit_btn = (Button)dialog.findViewById(R.id.exit_btn);
-
-		newgame_btn.setOnClickListener(this);
 		resume_btn.setOnClickListener(this);
 		setting_btn.setOnClickListener(this);
+		backtomainmenu_btn.setOnClickListener(this);
 		exit_btn.setOnClickListener(this);
-		
+		nextweapon_btn.setOnClickListener(this);
+		prevweapon_btn.setOnClickListener(this);
 	}
 
 	@Override
@@ -61,7 +74,7 @@ public class Jembalang extends Activity implements OnClickListener {
 		}
 		if (view == dialog.findViewById(R.id.resume_btn)) {
 			dialog.cancel();
-			if (gameView != null){
+			if (gameView != null) {
 				gameView.resume();
 			}
 		}
@@ -69,14 +82,17 @@ public class Jembalang extends Activity implements OnClickListener {
 			Toast.makeText(view.getContext(), "Setting Button clicked",
 					Toast.LENGTH_LONG).show();
 		}
-		if (view == findViewById(R.id.newgame_btn)){
-			setContentView(R.layout.cobagabung);
-			gameView = (GameThread) Jembalang.this
-					.findViewById(R.id.game_view);
-			gameView.setFocusable(true);
-			gameView.setFocusableInTouchMode(true);
-			gameView.start();
-
+		if (view == dialog.findViewById(R.id.backtomainmenu_btn)) {
+			finish();
+			Intent i = new Intent();
+			i.setClassName("jembalang.compfest.game","jembalang.compfest.game.MainMenu");
+			startActivity(i);
+		}
+		if (view == findViewById(R.id.img_larrow)) {
+			Weapon.prevWeapon();
+		}
+		if (view == findViewById(R.id.img_rarrow)) {
+			Weapon.nextWeapon();
 		}
 	}
 

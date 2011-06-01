@@ -96,7 +96,7 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 		gameScore = 0;
 		gameHit = 0;
 		gameShot = 0;
-		Weapon.init(this, Weapon.RUDAL);
+		Weapon.init(this, Weapon.RUDAL, Weapon.GUN, Weapon.SLOWER);
 		time = 0;
 		((Thread) new Thread(this)).start();
 
@@ -191,11 +191,11 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 			// fire = Weapon.take().getArea();
 			Timer t = new Timer();
 			t.schedule(new TimerTask() {
-				
+
 				@Override
 				public void run() {
 					gameShot += 1;
-					Weapon.active=false;
+					Weapon.active = false;
 					boolean[] hit = new boolean[1];
 					for (Bug b : bug) {
 						if (b != null && b.visible) {
@@ -210,6 +210,7 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 		}
 		return true;
 	}
+
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		return false;
 	}
@@ -217,9 +218,11 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 	public LayerManager getLayerManager() {
 		return layerManager;
 	}
+
 	public void pause() {
 		active = false;
 	}
+
 	public void resume() {
 		active = true;
 		((Thread) new Thread(this)).start();

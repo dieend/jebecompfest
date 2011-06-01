@@ -31,7 +31,7 @@ public class SplashScreen extends Activity {
                finish();
                Intent i = new Intent();
                i.setClassName("jembalang.compfest.game",
-                              "jembalang.compfest.game.Jembalang");
+                              "jembalang.compfest.game.MainMenu");
                startActivity(i);
             }
          }

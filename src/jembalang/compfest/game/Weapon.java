@@ -98,7 +98,11 @@ public class Weapon {
 		currentWeapon = (currentWeapon + 1) % weaponList.size();
 	}
 	public static void prevWeapon() {
-		currentWeapon = (currentWeapon - 1) % weaponList.size();
+		if (currentWeapon == 0){
+			currentWeapon = weaponList.size() - 1;
+		} else {
+			currentWeapon = currentWeapon - 1;
+		}
 	}
 	public int buffType() {
 		return buff;
