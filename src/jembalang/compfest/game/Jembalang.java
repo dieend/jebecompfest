@@ -57,6 +57,7 @@ public class Jembalang extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		if (view == dialog.findViewById(R.id.exit_btn)) {
 			finish();
+			System.exit(0);
 		}
 		if (view == dialog.findViewById(R.id.resume_btn)) {
 			dialog.cancel();
