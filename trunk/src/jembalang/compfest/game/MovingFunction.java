@@ -11,9 +11,12 @@ public class MovingFunction {
 	public static final int STAY = 0;//x1,y1,boolstay,timestay
 	public static final int LINE = 1;//x1,y1,x2,y2,speed
 	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
+	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed,reflexive
 	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
-	
+	public static final int SHUNPO = 5;//x1,y1,x2,y2
+	public static final int BOSSMOVESTRIKE1 = 6;
+	public static final int BOSSMOVESTRIKE2 = 7;
+	public static final int BOSSMOVESTRIKE3 = 8;
 	
 	public static int gcd(int a,int b){
 		if (a==0){
@@ -49,7 +52,7 @@ public class MovingFunction {
 	
 	
 	////////
-	public static final int bound=10;
+	public static final int bound=11;
 	
 	private static Random random = new Random(System.currentTimeMillis());
 	
@@ -70,6 +73,14 @@ public class MovingFunction {
 		return getRandom()+2*bound;
 	}
 	///////
+	
+	public static void reverse(float[] x,int length){
+		for(int i=0;i<length/2;++i){
+			float temp=x[i];
+			x[i]=x[length-i];
+			x[length-i]=temp;
+		}
+	}
 	
 	//is[0]=status,is[1]=length param,is[2]=start param
 	public MovingFunction(Bug bug,int moved,int viewWidth,int viewHeight){
@@ -407,7 +418,7 @@ public class MovingFunction {
 			}else if (moved==7+2*bound){
 				speedmoved3=3;
 			}
-//			public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speedz
+//			public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speedz,reflexive
 			
 			bug.setPosition(viewWidth/2-15, 100);
 			
@@ -421,51 +432,113 @@ public class MovingFunction {
 			is[6]=100;
 			is[7]=viewWidth/2-30;
 			is[8]=1;
-			is[9]=2;
+			is[9]=speedmoved3;
+			is[10]=0;
 			
-			is[10]=MovingFunction.ARC;
-			is[11]=bug.getX();
-			is[12]=bug.getY();
-			is[13]=0;
-			is[14]=100;
-			is[15]=viewWidth/2-30;
-			is[16]=-1;
-			is[17]=2;
+			is[11]=MovingFunction.ARC;
+			is[12]=bug.getX();
+			is[13]=bug.getY();
+			is[14]=viewWidth/2-15;
+			is[15]=100;
+			is[16]=(viewWidth/2-30);
+			is[17]=-1;
+			is[18]=speedmoved3;
+			is[19]=1;
 			
-			length=18;
+			is[20]=MovingFunction.ARC;
+			is[21]=bug.getX();
+			is[22]=bug.getY();
+			is[23]=15;
+			is[24]=100;
+			is[25]=(viewWidth/2-30);
+			is[26]=1;
+			is[27]=speedmoved3;
+			is[28]=1;
+			
+			is[29]=MovingFunction.ARC;
+			is[30]=bug.getX();
+			is[31]=bug.getY();
+			is[32]=viewWidth/2-15;
+			is[33]=100;
+			is[34]=(viewWidth/2-30);
+			is[35]=-1;
+			is[36]=speedmoved3;
+			is[37]=0;
+			
+			is[38]=MovingFunction.LINE;
+			is[39]=bug.getX();
+			is[40]=bug.getY();
+			is[41]=viewWidth/2-15;
+			is[42]=viewHeight+30;
+			is[43]=speedmoved3+4;
+			
+			length=44;
+			
 		}else if (moved%bound==8){//STRIKE-8
 			int speedmoved3=1;
-			if (moved==8){
+			if (moved==7){
 				speedmoved3=1;
-			}else if (moved==8+bound){
+			}else if (moved==7+bound){
 				speedmoved3=2;
-			}else if (moved==8+2*bound){
+			}else if (moved==7+2*bound){
 				speedmoved3=3;
 			}
+//			public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speedz,reflexive
 			
-			bug.setPosition(50, 50);
+			bug.setPosition(viewWidth/2-15, 100);
 			
 			is[0]=0;
 			is[1]=1;
 			
-			is[2]=MovingFunction.LINE;
+			is[2]=MovingFunction.ARC;
 			is[3]=bug.getX();
 			is[4]=bug.getY();
-			is[5]=250;
+			is[5]=15;
 			is[6]=100;
+			is[7]=viewWidth/2-30;
+			is[8]=1;
+			is[9]=speedmoved3;
+			is[10]=1;
 			
-			is[7]=speedmoved3;
+			is[11]=MovingFunction.ARC;
+			is[12]=bug.getX();
+			is[13]=bug.getY();
+			is[14]=viewWidth/2-15;
+			is[15]=100;
+			is[16]=(viewWidth/2-30);
+			is[17]=-1;
+			is[18]=speedmoved3;
+			is[19]=0;
 			
-			is[8]=MovingFunction.FASTARC;
-			is[9]=250;
-			is[10]=100;
-			is[11]=200;
-			is[12]=100;
-			is[13]=speedmoved3-1;
-			is[14]=speedmoved3+14;
-			is[15]=800;
+			is[20]=MovingFunction.ARC;
+			is[21]=bug.getX();
+			is[22]=bug.getY();
+			is[23]=viewWidth-30;
+			is[24]=100;
+			is[25]=(viewWidth/2-30);
+			is[26]=1;
+			is[27]=speedmoved3;
+			is[28]=0;
 			
-			length=16;
+			is[29]=MovingFunction.ARC;
+			is[30]=bug.getX();
+			is[31]=bug.getY();
+			is[32]=viewWidth/2-15;
+			is[33]=100;
+			is[34]=(viewWidth/2-30);
+			is[35]=-1;
+			is[36]=speedmoved3;
+			is[37]=1;
+			
+			is[38]=MovingFunction.LINE;
+			is[39]=bug.getX();
+			is[40]=bug.getY();
+			is[41]=viewWidth/2-15;
+			is[42]=viewHeight+30;
+			is[43]=speedmoved3+4;
+			
+			length=44;
+			
 		}else if (moved%bound==9){//STRIKE-9
 			int speedmoved3=3;
 			if (moved==9){
@@ -476,47 +549,51 @@ public class MovingFunction {
 				speedmoved3=7;
 			}
 			
-			bug.setPosition(160, 50);
+			bug.setPosition(viewWidth/2, 30);
 			is[0]=0;
 			is[1]=1;
 			
 			is[2]=MovingFunction.ARC;
 			is[3]=bug.getX();
 			is[4]=bug.getY();
-			is[5]=160;
-			is[6]=150;
+			is[5]=viewWidth/2;
+			is[6]=viewHeight/4+30;
 			is[7]=100;
 			is[8]=1;
 			is[9]=speedmoved3;//speed
+			is[10]=0;
 			
-			is[10]=MovingFunction.ARC;
-			is[11]=160;
-			is[12]=150;
-			is[13]=160;
-			is[14]=250;
-			is[15]=100;
-			is[16]=-1;
-			is[17]=speedmoved3;//speed
+			is[11]=MovingFunction.ARC;
+			is[12]=bug.getX();
+			is[13]=bug.getY();
+			is[14]=viewWidth/2;
+			is[15]=viewHeight/2+30;
+			is[16]=100;
+			is[17]=-1;
+			is[18]=speedmoved3;//speed
+			is[19]=0;
 			
-			is[18]=MovingFunction.ARC;
-			is[19]=160;
-			is[20]=250;
-			is[21]=160;
-			is[22]=350;
-			is[23]=100;
-			is[24]=1;
-			is[25]=speedmoved3;
+			is[20]=MovingFunction.ARC;
+			is[21]=bug.getX();
+			is[22]=bug.getY();
+			is[23]=viewWidth/2;
+			is[24]=3*viewHeight/4+30;
+			is[25]=100;
+			is[26]=1;
+			is[27]=speedmoved3;//speed
+			is[28]=0;
 			
-			is[26]=MovingFunction.ARC;
-			is[27]=160;
-			is[28]=350;
-			is[29]=160;
-			is[30]=500;
-			is[31]=100;
-			is[32]=-1;
-			is[33]=speedmoved3;
+			is[29]=MovingFunction.ARC;
+			is[30]=bug.getX();
+			is[31]=bug.getY();
+			is[32]=viewWidth/2;
+			is[33]=viewHeight+30;
+			is[34]=100;
+			is[35]=-1;
+			is[36]=speedmoved3;//speed
+			is[37]=0;
 			
-			length=34;
+			length=38;
 		}else if (moved%bound==10){//STRIKE-10
 			int speedmoved3=3;
 			if (moved==10){
@@ -527,47 +604,51 @@ public class MovingFunction {
 				speedmoved3=7;
 			}
 			
-			bug.setPosition(160, 50);
+			bug.setPosition(viewWidth/2-15, 30);
 			is[0]=0;
 			is[1]=1;
 			
 			is[2]=MovingFunction.ARC;
 			is[3]=bug.getX();
 			is[4]=bug.getY();
-			is[5]=160;
-			is[6]=150;
+			is[5]=viewWidth/2-15;
+			is[6]=viewHeight/4+30;
 			is[7]=100;
 			is[8]=-1;
 			is[9]=speedmoved3;//speed
+			is[10]=0;
 			
-			is[10]=MovingFunction.ARC;
-			is[11]=160;
-			is[12]=150;
-			is[13]=160;
-			is[14]=250;
-			is[15]=100;
-			is[16]=1;
-			is[17]=speedmoved3;//speed
+			is[11]=MovingFunction.ARC;
+			is[12]=bug.getX();
+			is[13]=bug.getY();
+			is[14]=viewWidth/2-15;
+			is[15]=viewHeight/2+30;
+			is[16]=100;
+			is[17]=1;
+			is[18]=speedmoved3;//speed
+			is[19]=0;
 			
-			is[18]=MovingFunction.ARC;
-			is[19]=160;
-			is[20]=250;
-			is[21]=160;
-			is[22]=350;
-			is[23]=100;
-			is[24]=-1;
-			is[25]=speedmoved3;
+			is[20]=MovingFunction.ARC;
+			is[21]=bug.getX();
+			is[22]=bug.getY();
+			is[23]=viewWidth/2-15;
+			is[24]=3*viewHeight/4+30;
+			is[25]=100;
+			is[26]=-1;
+			is[27]=speedmoved3;//speed
+			is[28]=0;
 			
-			is[26]=MovingFunction.ARC;
-			is[27]=160;
-			is[28]=350;
-			is[29]=160;
-			is[30]=500;
-			is[31]=100;
-			is[32]=1;
-			is[33]=speedmoved3;
+			is[29]=MovingFunction.ARC;
+			is[30]=bug.getX();
+			is[31]=bug.getY();
+			is[32]=viewWidth/2-15;
+			is[33]=viewHeight+30;
+			is[34]=100;
+			is[35]=1;
+			is[36]=speedmoved3;//speed
+			is[37]=0;
 			
-			length=34;
+			length=38;
 		}
 		
 	}
@@ -727,6 +808,10 @@ public class MovingFunction {
 					
 					transform(allarcx,allarcy, (int)(is[idx+3]-is[idx+1])/2, (int)(is[idx+4]-is[idx+2])/2, (int)idxforarcx+1);
 					xcount[counterxcount]++;
+					if (is[idx+8]==1){
+						reverse(allarcx, idxforarcx);
+						reverse(allarcy, idxforarcy);
+					}
 				}
 				if (idxforarcx-is[idx+7]>0){
 					idxforarcx-=is[idx+7];
@@ -736,9 +821,9 @@ public class MovingFunction {
 					
 					xcurr=is[idx+3];
 					ycurr=is[idx+4];
-					is[idx+9]=xcurr;
-					is[idx+10]=ycurr;
-					idx+=8;
+					is[idx+10]=xcurr;
+					is[idx+11]=ycurr;
+					idx+=9;
 					counterxcount++;
 					
 					return 0;
@@ -770,6 +855,8 @@ public class MovingFunction {
 					return 0;
 				}
 				
+			}else if (is[idx]==MovingFunction.SHUNPO){
+				
 			}
 			return 0; 
 		}
@@ -780,7 +867,7 @@ public class MovingFunction {
 //	public static final int STAY = 0;//x1,y1,boolstay,timestay
 //	public static final int LINE = 1;//x1,y1,x2,y2,speed
 //	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
-//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed
+//	public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speed,reflexive
 //	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
 	public float getdy(float t){
@@ -866,6 +953,11 @@ public class MovingFunction {
 					
 					transform(allarcx,allarcy, (int)(is[idx+3]-is[idx+1])/2, (int)(is[idx+4]-is[idx+2])/2, (int)idxforarcy+1);
 					xcount[counterxcount]++;
+					
+					if (is[idx+8]==1){
+						reverse(allarcx, idxforarcx);
+						reverse(allarcy, idxforarcy);
+					}
 				}
 				if (idxforarcy-is[idx+7]>0){
 					idxforarcy-=is[idx+7];
@@ -875,9 +967,9 @@ public class MovingFunction {
 					
 					xcurr=is[idx+3];
 					ycurr=is[idx+4];
-					is[idx+9]=xcurr;
-					is[idx+10]=ycurr;
-					idx+=8;
+					is[idx+10]=xcurr;
+					is[idx+11]=ycurr;
+					idx+=9;
 					counterxcount++;
 					
 					return 0;
