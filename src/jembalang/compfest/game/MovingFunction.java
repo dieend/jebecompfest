@@ -14,6 +14,7 @@ public class MovingFunction {
 	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed
 	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
 	
+	
 	public static int gcd(int a,int b){
 		if (a==0){
 		  a=b;
@@ -83,7 +84,7 @@ public class MovingFunction {
 		for(int i=0;i<xcount.length;++i){
 			xcount[i]=0;
 		}
-		if (moved%bound==0){
+		if (moved%bound==0){//STRIKE-1
 			bug.setPosition(30, 30);
 			is[0]=0;
 			is[1]=1;
@@ -103,7 +104,7 @@ public class MovingFunction {
 			}
 			length=8;
 			
-		}else if (moved%bound==1){
+		}else if (moved%bound==1){//STRIKE-2
 			bug.setPosition(viewWidth/2-15, 30);
 			is[0]=0;
 			is[1]=1;
@@ -123,7 +124,7 @@ public class MovingFunction {
 			}
 			length=8;
 			
-		}else if (moved%bound==2){
+		}else if (moved%bound==2){//STRIKE-3
 			bug.setPosition(viewWidth-30, 30);
 			is[0]=0;
 			is[1]=1;
@@ -152,31 +153,33 @@ public class MovingFunction {
 			}else if (moved==3+2*bound){
 				speedmoved3=3;
 			}
-			int tempheight=viewHeight/9;
+			int tempheight=viewHeight/4;
 			
-			bug.setPosition(30, 30);
+			bug.setPosition(viewWidth/3, 30);
 			is[0]=0;
 			is[1]=1;
 			is[2]=MovingFunction.LINE;
 			is[3]=bug.getX();
 			is[4]=bug.getY();
-			is[5]=viewWidth-30;
+			is[5]=2*viewWidth/3;
 			is[6]=tempheight+30;
 			
 			is[7]=speedmoved3;//speed
 			
+			
 			is[8]=MovingFunction.LINE;
 			is[9]=0;
 			is[10]=0;
-			is[11]=30;
+			is[11]=viewWidth/3;
 			is[12]=2*tempheight+30;
 			
 			is[13]=speedmoved3;//speed
 			
+			
 			is[14]=MovingFunction.LINE;
 			is[15]=0;
 			is[16]=0;
-			is[17]=viewWidth-30;
+			is[17]=2*viewWidth/3;
 			is[18]=3*tempheight+30;
 			
 			is[19]=speedmoved3;//speed
@@ -184,52 +187,55 @@ public class MovingFunction {
 			is[20]=MovingFunction.LINE;
 			is[21]=0;
 			is[22]=0;
-			is[23]=30;
+			is[23]=viewWidth/3;
 			is[24]=4*tempheight+30;
 			
 			is[25]=speedmoved3;//speed
 			
-			is[26]=MovingFunction.LINE;
-			is[27]=0;
-			is[28]=0;
-			is[29]=viewWidth-30;
-			is[30]=5*tempheight+30;
+			length=26;
 			
-			is[31]=speedmoved3;//speed
+//			
+//			is[26]=MovingFunction.LINE;
+//			is[27]=0;
+//			is[28]=0;
+//			is[29]=viewWidth-30;
+//			is[30]=5*tempheight+30;
+//			
+//			is[31]=speedmoved3;//speed
+//			
+//			is[32]=MovingFunction.LINE;
+//			is[33]=0;
+//			is[34]=0;
+//			is[35]=30;
+//			is[36]=6*tempheight+30;
+//			
+//			is[37]=speedmoved3;//speed
+//			
+//			is[38]=MovingFunction.LINE;
+//			is[39]=0;
+//			is[40]=0;
+//			is[41]=viewWidth-30;
+//			is[42]=7*tempheight+30;
+//			
+//			is[43]=speedmoved3;//speed
+//			
+//			is[44]=MovingFunction.LINE;
+//			is[45]=0;
+//			is[46]=0;
+//			is[47]=30;
+//			is[48]=8*tempheight+30;
+//			
+//			is[49]=speedmoved3;//speed
+//			
+//			is[50]=MovingFunction.LINE;
+//			is[51]=0;
+//			is[52]=0;
+//			is[53]=viewWidth-30;
+//			is[54]=9*tempheight+30;
+//			
+//			is[55]=speedmoved3;//speed
 			
-			is[32]=MovingFunction.LINE;
-			is[33]=0;
-			is[34]=0;
-			is[35]=30;
-			is[36]=6*tempheight+30;
 			
-			is[37]=speedmoved3;//speed
-			
-			is[38]=MovingFunction.LINE;
-			is[39]=0;
-			is[40]=0;
-			is[41]=viewWidth-30;
-			is[42]=7*tempheight+30;
-			
-			is[43]=speedmoved3;//speed
-			
-			is[44]=MovingFunction.LINE;
-			is[45]=0;
-			is[46]=0;
-			is[47]=30;
-			is[48]=8*tempheight+30;
-			
-			is[49]=speedmoved3;//speed
-			
-			is[50]=MovingFunction.LINE;
-			is[51]=0;
-			is[52]=0;
-			is[53]=viewWidth-30;
-			is[54]=9*tempheight+30;
-			
-			is[55]=speedmoved3;//speed
-			
-			length=56;
 		}else if (moved%bound==4){//STRIKE-5
 			int speedmoved3=1;
 			if (moved==4){
@@ -237,6 +243,56 @@ public class MovingFunction {
 			}else if (moved==4+bound){
 				speedmoved3=2;
 			}else if (moved==4+2*bound){
+				speedmoved3=3;
+			}
+			int tempheight=viewHeight/4;
+			
+			bug.setPosition(2*viewWidth/3, 30);
+			is[0]=0;
+			is[1]=1;
+			is[2]=MovingFunction.LINE;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=viewWidth/3;
+			is[6]=tempheight+30;
+			
+			is[7]=speedmoved3;//speed
+			
+			
+			is[8]=MovingFunction.LINE;
+			is[9]=0;
+			is[10]=0;
+			is[11]=2*viewWidth/3;
+			is[12]=2*tempheight+30;
+			
+			is[13]=speedmoved3;//speed
+			
+			
+			is[14]=MovingFunction.LINE;
+			is[15]=0;
+			is[16]=0;
+			is[17]=viewWidth/3;
+			is[18]=3*tempheight+30;
+			
+			is[19]=speedmoved3;//speed
+			
+			is[20]=MovingFunction.LINE;
+			is[21]=0;
+			is[22]=0;
+			is[23]=2*viewWidth/3;
+			is[24]=4*tempheight+30;
+			
+			is[25]=speedmoved3;//speed
+			
+			length=26;
+			
+		}else if (moved%bound==5){//STRIKE-5
+			int speedmoved3=1;
+			if (moved==5){
+				speedmoved3=1;
+			}else if (moved==5+bound){
+				speedmoved3=2;
+			}else if (moved==5+2*bound){
 				speedmoved3=3;
 			}
 			
@@ -286,13 +342,13 @@ public class MovingFunction {
 			is[31]=speedmoved3*2;
 			
 			length=32;
-		}else if (moved%bound==5){//STRIKE-5
+		}else if (moved%bound==6){//STRIKE-5
 			int speedmoved3=1;
-			if (moved==5){
+			if (moved==6){
 				speedmoved3=1;
-			}else if (moved==5+bound){
+			}else if (moved==6+bound){
 				speedmoved3=2;
-			}else if (moved==5+2*bound){
+			}else if (moved==6+2*bound){
 				speedmoved3=3;
 			}
 			
@@ -342,46 +398,48 @@ public class MovingFunction {
 			
 			length=32;
 			
-		}else if (moved%bound==6){//STRIKE-7
-			int speedmoved3=1;
-			if (moved==6){
-				speedmoved3=1;
-			}else if (moved==6+bound){
-				speedmoved3=2;
-			}else if (moved==6+2*bound){
-				speedmoved3=3;
-			}
-			
-			bug.setPosition(250, 50);
-			
-			is[0]=0;
-			is[1]=1;
-			
-			is[2]=MovingFunction.LINE;
-			is[3]=bug.getX();
-			is[4]=bug.getY();
-			is[5]=50;
-			is[6]=100;
-			
-			is[7]=speedmoved3;
-			
-			is[8]=MovingFunction.FASTARC;
-			is[9]=50;
-			is[10]=100;
-			is[11]=100;
-			is[12]=100;
-			is[13]=speedmoved3+7;
-			is[14]=speedmoved3+14;
-			is[15]=800;
-			
-			length=16;
-		}else if (moved%bound==7){//STRIKE-8
+		}else if (moved%bound==7){//STRIKE-7
 			int speedmoved3=1;
 			if (moved==7){
 				speedmoved3=1;
 			}else if (moved==7+bound){
 				speedmoved3=2;
 			}else if (moved==7+2*bound){
+				speedmoved3=3;
+			}
+//			public static final int ARC = 3;//x1,y1,x2,y2,t1,dir(1/-1),speedz
+			
+			bug.setPosition(viewWidth/2-15, 100);
+			
+			is[0]=0;
+			is[1]=1;
+			
+			is[2]=MovingFunction.ARC;
+			is[3]=bug.getX();
+			is[4]=bug.getY();
+			is[5]=viewWidth-30;
+			is[6]=100;
+			is[7]=viewWidth/2-30;
+			is[8]=1;
+			is[9]=2;
+			
+			is[10]=MovingFunction.ARC;
+			is[11]=bug.getX();
+			is[12]=bug.getY();
+			is[13]=0;
+			is[14]=100;
+			is[15]=viewWidth/2-30;
+			is[16]=-1;
+			is[17]=2;
+			
+			length=18;
+		}else if (moved%bound==8){//STRIKE-8
+			int speedmoved3=1;
+			if (moved==8){
+				speedmoved3=1;
+			}else if (moved==8+bound){
+				speedmoved3=2;
+			}else if (moved==8+2*bound){
 				speedmoved3=3;
 			}
 			
@@ -408,13 +466,13 @@ public class MovingFunction {
 			is[15]=800;
 			
 			length=16;
-		}else if (moved%bound==8){//STRIKE-9
+		}else if (moved%bound==9){//STRIKE-9
 			int speedmoved3=3;
-			if (moved==8){
+			if (moved==9){
 				speedmoved3=3;
-			}else if (moved==8+bound){
+			}else if (moved==9+bound){
 				speedmoved3=5;
-			}else if (moved==8+2*bound){
+			}else if (moved==9+2*bound){
 				speedmoved3=7;
 			}
 			
@@ -459,13 +517,13 @@ public class MovingFunction {
 			is[33]=speedmoved3;
 			
 			length=34;
-		}else if (moved%bound==9){//STRIKE-10
+		}else if (moved%bound==10){//STRIKE-10
 			int speedmoved3=3;
-			if (moved==9){
+			if (moved==10){
 				speedmoved3=3;
-			}else if (moved==9+bound){
+			}else if (moved==10+bound){
 				speedmoved3=5;
-			}else if (moved==9+2*bound){
+			}else if (moved==10+2*bound){
 				speedmoved3=7;
 			}
 			
