@@ -20,8 +20,11 @@ public class Jembalang extends Activity implements OnClickListener {
 		super.onKeyDown(keyCode, event);
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			dialog.show();
-			return true;
+			if (gameView != null){
+				gameView.pause();
+				dialog.show();
+				return true;
+			}
 		default:
 
 		}
@@ -57,6 +60,9 @@ public class Jembalang extends Activity implements OnClickListener {
 		}
 		if (view == dialog.findViewById(R.id.resume_btn)) {
 			dialog.cancel();
+			if (gameView != null){
+				gameView.resume();
+			}
 		}
 		if (view == dialog.findViewById(R.id.setting_btn)) {
 			Toast.makeText(view.getContext(), "Setting Button clicked",
