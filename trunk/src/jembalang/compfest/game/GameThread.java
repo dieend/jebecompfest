@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -144,7 +145,6 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 			// pemanggilan fungsi ini otomatis ngebuat memanggil onDraw();
 			updatePhysics();
 			postInvalidate();
-
 		}
 	}
 
