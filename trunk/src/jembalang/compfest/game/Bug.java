@@ -19,8 +19,8 @@ public class Bug extends Sprite {
 	private int base_score;
 	private int type;
 	private int buff;
-	private boolean smalling;
-	private boolean bigging;
+	public boolean smalling;
+	public boolean bigging;
 	private float currentSize;
 	public static final int TYPE1 = 0;
 	public static final int BIRD= 1;
@@ -51,7 +51,7 @@ public class Bug extends Sprite {
 			tmp.HP = tmp.maxHP;
 			tmp.attack = 10;
 			tmp.setFunction(null);
-			tmp.base_score = 100;;
+			tmp.base_score = 100;
 			tmp.setSequence(NORMAL);
 			tmp.smalling = true;	
 		}
@@ -59,8 +59,8 @@ public class Bug extends Sprite {
 		tmp.paint = new Paint();
 		tmp.type = bugType;
 		tmp.currentSize = 1F;
-		tmp.smalling = false;
-		tmp.bigging = false;
+		tmp.smalling=false;
+		tmp.bigging=false;
 		return tmp;
 	}
 	private Bug(Bitmap[] images, GameThread host){
@@ -70,19 +70,21 @@ public class Bug extends Sprite {
 
 	public void setFunction(MovingFunction mf){
 		if (mf == null){
-			this.mf = new MovingFunction(this, MovingFunction.getEasy(),host.getViewWidth(),host.getViewHeight());
+			this.mf = new MovingFunction(this, 12,host.getViewWidth(),host.getViewHeight());
 		} else {
 			this.mf = mf;
 		}
 	}
+	
+	public boolean isBuff(){
+		return (buff==Weapon.BUFF_FREEZE && tintTime>0);
+	}
+	
 	public void update(float time){
 		float dx = mf.getdx(time);
 		float dy = mf.getdy(time);
 		setRotate(Math.atan2(dy, dx)* 180/Math.PI-90);
-		if (buff == Weapon.BUFF_FREEZE&& tintTime > 0){
-			dx *= 0.2;
-			dy *= 0.2;
-		} else if (buff == Weapon.BUFF_PARALYZED && tintTime > 0){
+		if (buff == Weapon.BUFF_PARALYZED && tintTime > 0){
 			dx = 0;
 			dy = 0;
 		}
@@ -98,16 +100,17 @@ public class Bug extends Sprite {
 				mat.postConcat(matrixMirror);
 			}
 			if (smalling){
-				currentSize = (currentSize*0.9F);
-				if (smalling && Math.abs(currentSize)<0.01F){
+				if (smalling && Math.abs(currentSize)<0.1F){
 					smalling = false;
-				}
+				}else
+					currentSize = (currentSize*0.9F*(1/changesizespeed));
 			}
 			if (bigging){
-				currentSize = (currentSize*10F/9F);
-				if (bigging && Math.abs(currentSize-1F)<0.01F) {
+				if (bigging && Math.abs(currentSize-1F)<0.1F) {
 					bigging = false;
 				}
+				else
+					currentSize = (currentSize*10F/9F*changesizespeed);
 			}
 			mat.postScale(currentSize, currentSize);
 			b = Bitmap.createBitmap(images[sequence[currentFrameIdx]], 0, 0, getWidth(), getHeight(), mat,true);
@@ -160,11 +163,15 @@ public class Bug extends Sprite {
 		this.tintTime = tintTime;
 		setSequence(sequence);
 	}
-	public void setSmaller(){
+	public void setSmaller(float d){
 		smalling = true;
+		changesizespeed=d;
 	}
 	public void setBigger() {
 		smalling = false;
 		bigging = true;
 	}
+	
+	private float changesizespeed=1;
+	
 }
