@@ -776,6 +776,8 @@ public class MovingFunction {
 		}
 	}
 	
+	private float tempspeed=1;
+	
 	public float getdx(float t){
 		while (idx<length)
 		{
@@ -821,10 +823,17 @@ public class MovingFunction {
 					nextyy=(int)((nexty*is[idx+5])/divider);
 					xcount[counterxcount]++;
 				}
+				
+				if (bug.isBuff()){
+					tempspeed=(float)0.2;
+				}else{
+					tempspeed=1;
+				}
+				
 				if (x1lessx2){
 					if (is[idx+1]<=is[idx+3]){
-						is[idx+1]+=nextxx;
-						return (float)nextxx;
+						is[idx+1]+=nextxx*tempspeed;
+						return (float)nextxx*tempspeed;
 					}
 					xcurr=is[idx+3];
 					ycurr=is[idx+4];
@@ -835,8 +844,8 @@ public class MovingFunction {
 					return 0;
 				}else{
 					if (is[idx+1]>=is[idx+3]){
-						is[idx+1]+=nextxx;
-						return (float)nextxx;
+						is[idx+1]+=nextxx*tempspeed;
+						return (float)nextxx*tempspeed;
 					}
 					xcurr=is[idx+3];
 					ycurr=is[idx+4];
@@ -867,10 +876,20 @@ public class MovingFunction {
 						reverse(allarcy, idxforarcy);
 					}
 				}
-				if (idxforarcx-is[idx+7]>0){
-					idxforarcx-=is[idx+7];
+				
+				if (bug.isBuff()){
+					tempspeed=is[idx+7]-1;
+					if (tempspeed<0){
+						tempspeed=0;
+					}
+				}else{
+					tempspeed=0;
+				}
+
+				if (idxforarcx-(is[idx+7]-tempspeed)>0){
+					idxforarcx-=(is[idx+7]-tempspeed);
 //					float c=(allarcx[idxforarcx]-allarcx[idxforarcx+1]);
-					return Math.round(allarcx[idxforarcx]-allarcx[(int)idxforarcx+(int)is[idx+7]]);
+					return Math.round(allarcx[idxforarcx]-allarcx[(int)idxforarcx+(int)is[idx+7]-(int)tempspeed]);
 				}else{
 					
 					xcurr=is[idx+3];
@@ -891,6 +910,8 @@ public class MovingFunction {
 					xcurr=is[idx+1];
 					ycurr=is[idx+2];
 				}
+				
+				
 				
 				if (fastarctemp<is[idx+7]){
 					double ft1 = radiusfastarc*Math.cos(fastarctemp)+is[idx+3];
@@ -987,10 +1008,16 @@ public class MovingFunction {
 					xcount[counterxcount]++;
 				}
 				
+				if (bug.isBuff()){
+					tempspeed=(float)0.2;
+				}else{
+					tempspeed=1;
+				}
+				
 				if (y1lessy2){
 					if (is[idx+2]<=is[idx+4]){
-						is[idx+2]+=nextyy;
-						return (float)nextyy;
+						is[idx+2]+=nextyy*tempspeed;
+						return (float)nextyy*tempspeed;
 					}
 					xcurr=is[idx+3];
 					ycurr=is[idx+4];
@@ -1001,8 +1028,8 @@ public class MovingFunction {
 					return 0;
 				}else{
 					if (is[idx+2]>=is[idx+4]){
-						is[idx+2]+=nextyy;
-						return (float)nextyy;
+						is[idx+2]+=nextyy*tempspeed;
+						return (float)nextyy*tempspeed;
 					}
 					xcurr=is[idx+3];
 					ycurr=is[idx+4];
@@ -1034,10 +1061,20 @@ public class MovingFunction {
 						reverse(allarcy, idxforarcy);
 					}
 				}
-				if (idxforarcy-is[idx+7]>0){
-					idxforarcy-=is[idx+7];
+				
+				if (bug.isBuff()){
+					tempspeed=is[idx+7]-1;
+					if (tempspeed<0){
+						tempspeed=0;
+					}
+				}else{
+					tempspeed=0;
+				}
+				
+				if (idxforarcy-(is[idx+7]-tempspeed)>0){
+					idxforarcy-=(is[idx+7]-tempspeed);
 //					float c=allarcy[idxforarcy]-allarcy[idxforarcy+1];
-					return Math.round(allarcy[idxforarcy]-allarcy[idxforarcy+(int)is[idx+7]]);
+					return Math.round(allarcy[idxforarcy]-allarcy[idxforarcy+(int)is[idx+7]-(int)tempspeed]);
 				}else{
 					
 					xcurr=is[idx+3];
