@@ -5,6 +5,7 @@ public class Player {
 	private int levelOpened;
 	private int[] scorePerLevel;
 	private int[] weapons;
+	private int[][] medals; //[level][medal]
 	private int coin;
 	
 	public Player(String name,int levelOpened, int[] scorePerLevel, int[] weapons, int coin){

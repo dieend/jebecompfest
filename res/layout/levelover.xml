@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TableLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<TextView android:text="Level Summary" android:id="@+id/levelsummary_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="center"></TextView>
+		<TextView android:text="Accuracy" android:id="@+id/levelaccuracy_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="Score" android:id="@+id/levelscore_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="Medals Gained" android:id="@+id/levelmedal_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<!-- Medals image here -->
+		<Button android:text="Repeat Level" android:id="@+id/repeatlevel_btn"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<Button android:text="Main Menu" android:id="@+id/mainmenu_btn"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	</TableLayout>
+</LinearLayout>

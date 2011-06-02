@@ -26,7 +26,7 @@ public class MainMenu extends Activity implements OnClickListener {
 		if (v == findViewById(R.id.newgame_btn)){
 			finish();
 			Intent i = new Intent();
-			i.setClassName("jembalang.compfest.game", "jembalang.compfest.game.Jembalang");
+			i.setClassName("jembalang.compfest.game", "jembalang.compfest.game.LevelSelectAct");
 			startActivity(i);
 		}
 		if (v == findViewById(R.id.setting_btn)){
