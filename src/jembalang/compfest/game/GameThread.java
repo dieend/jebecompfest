@@ -193,6 +193,18 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 			Vector<Integer> medals = new Vector<Integer>();
 			Integer[] k = new Integer[medals.size()];
 			//TODO jika dapat medal, masukin ke medals;
+			//0-2 score (bronze-emas), 3-5 Accuracy(bronze-emas), 6 Lifesaver
+			if (gameScore >= 8500) medals.add(2);
+			else if (gameScore >= 6500) medals.add(1);
+			else if (gameScore >= 4500) medals.add(0);
+			
+			double accuracy = ((double)gameHit/gameScore * 100);
+			if (accuracy >= 90) medals.add(5);
+			else if (accuracy >= 75) medals.add(4);
+			else if (accuracy >= 50) medals.add(3);
+			
+			if (player_HP == 100) medals.add(6);
+			
 			host.endgame(WIN, medals.toArray(k));
 		}
 		

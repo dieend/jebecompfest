@@ -17,6 +17,7 @@ public class SoundManager {
 	
 	private SoundManager()
 	{   
+		
 	}
 	
 	/**
@@ -64,6 +65,7 @@ public class SoundManager {
 	{
 		mSoundPoolMap.put(1, mSoundPool.load(mContext, R.raw.starwars, 1));
 		mSoundPoolMap.put(2, mSoundPool.load(mContext, R.raw.terminator, 1));		
+		mSoundPoolMap.put(3, mSoundPool.load(mContext, R.raw.usa, 1));
 	}
 	
 	/**
@@ -94,8 +96,7 @@ public class SoundManager {
 		mSoundPool = null;
 	    mSoundPoolMap.clear();
 	    mAudioManager.unloadSoundEffects();
-	    _instance = null;
-	    
+	    _instance = null;	    
 	}
 
 	

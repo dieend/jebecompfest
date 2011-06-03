@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TableLayout android:layout_width="fill_parent" android:id="@+id/tableLayout1"
+		android:layout_height="fill_parent" android:gravity="center">
+		<TextView android:text="Congratz ! You win this level"
+			android:id="@+id/textView1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:gravity="center"></TextView>
+		<TextView android:layout_height="wrap_content" android:id="@+id/textView2"
+			android:layout_width="wrap_content"
+			android:text="For your outstanding performance, you have gained these medal(s)"
+			android:gravity="center"></TextView>
+		<TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:gravity="center">
+			<ImageView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:id="@+id/imageView1"
+				android:src="@drawable/icon"></ImageView>
+			<ImageView android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/imageView2"
+				android:src="@drawable/icon"></ImageView>
+			<ImageView android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/imageView3"
+				android:src="@drawable/icon"></ImageView>
+			<ImageView android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:id="@+id/imageView4"
+				android:src="@drawable/icon"></ImageView>
+		</TableRow>
+		<Button android:text="Back to level select" android:id="@+id/button1"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+	</TableLayout>
+</LinearLayout>
