@@ -70,6 +70,15 @@ public class ImageCollection {
 					tmp = WeaponExplosionLoader(TYPE_OF_SOURCE);
 				}
 				break;
+			case IMAGE_WEAPON:
+				if (WeaponImage == null){
+					WeaponImage = new HashMap<Integer, Bitmap[]>();
+				}
+				tmp = WeaponImage.get(TYPE_OF_SOURCE);
+				if (tmp == null){
+					tmp = WeaponImageLoader(TYPE_OF_SOURCE);
+				}
+				break;
 			default:
 				break;
 		}
@@ -143,6 +152,10 @@ public class ImageCollection {
 			id = R.drawable.target;
 			column = 1;
 			row = 1;
+		} else if (weaponExplosionType == Weapon.RUDAL2){
+			id = R.drawable.ledakan;
+			column =1;
+			row=1;
 		}
 		tmp= BitmapFactory.decodeResource(resources, id);
 		image = splitImage(tmp,row,column); 
@@ -151,6 +164,28 @@ public class ImageCollection {
 	}
 	private Bitmap[] WeaponImageLoader(int weaponType){
 		Bitmap[] image = null;
+		int id = R.drawable.rock;
+		int column=1, row=1;
+		Bitmap tmp=null;
+		if (weaponType == Weapon.GUN){
+			id = R.drawable.gun;
+			column = 1;
+			row = 1;
+		} else if (weaponType == Weapon.SLOWER){
+			id = R.drawable.slower;
+			column = 1;
+			row = 1;
+		} else if (weaponType == Weapon.BURNER){
+			id = R.drawable.sword;
+			column = 1;
+			row = 1;
+		} else if (weaponType == Weapon.RUDAL){
+			id = R.drawable.rudal;
+			column = 1;
+			row = 1;
+		}
+		tmp= BitmapFactory.decodeResource(resources, id);
+		image = splitImage(tmp,row,column); 
 		WeaponImage.put(weaponType, image);
 		return image;
 	}

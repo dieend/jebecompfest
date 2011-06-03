@@ -18,12 +18,13 @@ public class MainMenu extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		try {
-			FileInputStream fis = openFileInput(APPNAME);
-			Player.init(fis);
-		} catch (FileNotFoundException ex){
-			Player.init();
-		}
+		Player.init();
+//		try {
+//			FileInputStream fis = openFileInput(APPNAME);
+//			Player.init(fis);
+//		} catch (FileNotFoundException ex){
+//			Player.init();
+//		}
 		Button newgame_btn = (Button)findViewById(R.id.newgame_btn);
 		Button setting_btn = (Button)findViewById(R.id.setting_btn);
 		newgame_btn.setOnClickListener(this);

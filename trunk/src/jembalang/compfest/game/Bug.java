@@ -75,7 +75,9 @@ public class Bug extends Sprite {
 			this.mf = mf;
 		}
 	}
-	
+	public int getMoney() {
+		return ((getRandom(base_score)%(base_score/2)) + (base_score/2));
+	}
 	public boolean isBuff(){
 		return (buff==Weapon.BUFF_FREEZE && tintTime>0);
 	}
