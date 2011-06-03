@@ -14,6 +14,8 @@ import android.widget.Toast;
 public class Jembalang extends Activity implements OnClickListener {
 	private GameThread gameView;
 	private Dialog dialog;
+	private Dialog windialog;
+	private Dialog losedialog;
 	private Button setting_btn;
 	private Button backtomainmenu_btn; 
 	private Button exit_btn;
@@ -21,8 +23,6 @@ public class Jembalang extends Activity implements OnClickListener {
 	private ImageView prevweapon_btn;
 	private ImageView weapon_img;
 	/** Called when the activity is first created. */
-
-	private Button resume_btn; 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		super.onKeyDown(keyCode, event);
@@ -34,7 +34,6 @@ public class Jembalang extends Activity implements OnClickListener {
 				return true;
 			}
 		default:
-
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -43,35 +42,49 @@ public class Jembalang extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameplay);
-		gameView = (GameThread) findViewById(R.id.game_view);
+		gameView = (GameThread) Jembalang.this.findViewById(R.id.game_view);
 		gameView.setFocusable(true);
 		gameView.setFocusableInTouchMode(true);
 		gameView.setHost(this);
-		gameView.ready();
+		gameView.start();
+		
 		dialog = new Dialog(this);
 		dialog.setContentView(R.layout.ingamemenu);
 		dialog.setTitle("Game Paused");
 		dialog.setCancelable(false);
 		
-		resume_btn = (Button) dialog.findViewById(R.id.resume_btn);
-		setting_btn = (Button) dialog
-				.findViewById(R.id.setting_btn);
-		backtomainmenu_btn = (Button) dialog
-				.findViewById(R.id.backtomainmenu_btn);
-		exit_btn = (Button) dialog.findViewById(R.id.exit_btn);
-		nextweapon_btn = (ImageView) findViewById(R.id.img_larrow);
-		prevweapon_btn = (ImageView) findViewById(R.id.img_rarrow);
+		windialog = new Dialog(this);
+		windialog.setContentView(R.layout.windialog);
+		windialog.setTitle("You Win");
+		windialog.setCancelable(false);
+		
+		losedialog = new Dialog(this);
+		losedialog.setContentView(R.layout.losedialog);
+		losedialog.setTitle("You Lose");
+		losedialog.setCancelable(false);
+		
+		Button backtolevelselectfromwin_btn = (Button)windialog.findViewById(R.id.button1);
+		Button backtolevelselectfromlose_btn = (Button)losedialog.findViewById(R.id.button1);
+		Button resume_btn = (Button) dialog.findViewById(R.id.resume_btn);
+		Button setting_btn = (Button) dialog.findViewById(R.id.setting_btn);
+		Button backtomainmenu_btn = (Button) dialog.findViewById(R.id.backtomainmenu_btn);
+		Button exit_btn = (Button) dialog.findViewById(R.id.exit_btn);
+		ImageView nextweapon_btn = (ImageView) findViewById(R.id.img_larrow);
+		ImageView prevweapon_btn = (ImageView) findViewById(R.id.img_rarrow);
 		// TODO implements weapon image change
-		weapon_img = (ImageView) findViewById(R.id.img_weapon);
-
+		ImageView weapon_img = (ImageView) findViewById(R.id.img_weapon);
+		
+		backtolevelselectfromlose_btn.setOnClickListener(this);
+		backtolevelselectfromwin_btn.setOnClickListener(this);
 		resume_btn.setOnClickListener(this);
 		setting_btn.setOnClickListener(this);
 		backtomainmenu_btn.setOnClickListener(this);
 		exit_btn.setOnClickListener(this);
 		nextweapon_btn.setOnClickListener(this);
 		prevweapon_btn.setOnClickListener(this);
-		weapon_img.setOnClickListener(this);
-		gameView.start();
+		
+		//windialog.show();
+		//losedialog.show();
 	}
 	@Override
 	public void onResume(){
@@ -81,52 +94,55 @@ public class Jembalang extends Activity implements OnClickListener {
 	}
 	@Override
 	public void onClick(View view) {
-		if (view == exit_btn) {
+		if (view == dialog.findViewById(R.id.exit_btn)) {
 			finish();
 			System.exit(0);
 		}
-		if (view == resume_btn) {
+		if (view == dialog.findViewById(R.id.resume_btn)) {
 			dialog.cancel();
 			if (gameView != null) {
 				gameView.resume();
 			}
 		}
-		if (view == setting_btn) {
+		if (view == dialog.findViewById(R.id.setting_btn)) {
 			Toast.makeText(view.getContext(), "Setting Button clicked",
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
-		if (view == backtomainmenu_btn) {
+		if (view == dialog.findViewById(R.id.backtomainmenu_btn)) {
 			finish();
 			gameView = null;
 			Intent i = new Intent();
 			i.setClassName("jembalang.compfest.game","jembalang.compfest.game.MainMenu");
 			startActivity(i);
 		}
-		if (view == prevweapon_btn) {
+		if (view == findViewById(R.id.img_larrow)) {
 			Weapon.prevWeapon();
-			weapon_img.setImageBitmap(Weapon.take().getImage());
 		}
-		if (view == nextweapon_btn) {
+		if (view == findViewById(R.id.img_rarrow)) {
 			Weapon.nextWeapon();
-			weapon_img.setImageBitmap(Weapon.take().getImage());
-			
 		}
-		if (view == weapon_img){
-			Weapon.take().reload();
+		if (view == windialog.findViewById(R.id.button1) || view == losedialog.findViewById(R.id.button1)){
+			finish();
+			Intent i = new Intent();
+			i.setClassName("jembalang.compfest.game", "jembalang.compfest.game.LevelSelectAct");
+			startActivity(i);
 		}
 	}
+	
 	public void endgame(int status, Integer[] medals){
 		if (status != GameThread.PAUSED){
 			if (status == GameThread.LOSE){
-				// TODO kalau menang nampilin apa
+				losedialog.show();
 			}else if (status == GameThread.WIN){
-				// TODO kalau kalah nampilin apa
+				windialog.show();
 			}
 		}
 	}
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
+		SoundManager.cleanup();
 		Weapon.destroy();
 	}
+	
 }

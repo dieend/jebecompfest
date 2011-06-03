@@ -14,6 +14,7 @@ public class LevelSelectAct extends Activity implements OnClickListener {
 		super.onKeyDown(keyCode, event);
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
+			finish();
 			Intent i = new Intent();
 			i.setClassName("jembalang.compfest.game",
 					"jembalang.compfest.game.MainMenu");
@@ -28,6 +29,8 @@ public class LevelSelectAct extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.levelselect);
 
+		//SoundManager.playSound(3, 1);
+		
 		Button play_btn = (Button) findViewById(R.id.play_btn);
 		play_btn.setOnClickListener(this);
 	}
@@ -42,4 +45,9 @@ public class LevelSelectAct extends Activity implements OnClickListener {
 			startActivity(i);
 		}
 	}
+	
+	public void onDestroy(){
+		SoundManager.cleanup();
+	}
+	
 }

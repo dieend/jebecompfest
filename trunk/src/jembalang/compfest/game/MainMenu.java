@@ -25,6 +25,10 @@ public class MainMenu extends Activity implements OnClickListener {
 //		} catch (FileNotFoundException ex){
 //			Player.init();
 //		}
+		SoundManager.getInstance();
+        SoundManager.initSounds(this);
+        SoundManager.loadSounds();
+		
 		Button newgame_btn = (Button)findViewById(R.id.newgame_btn);
 		Button setting_btn = (Button)findViewById(R.id.setting_btn);
 		newgame_btn.setOnClickListener(this);
@@ -41,6 +45,7 @@ public class MainMenu extends Activity implements OnClickListener {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
+		SoundManager.cleanup();
 		try {
 			FileOutputStream fos = openFileOutput(APPNAME, MODE_PRIVATE);
 			Player.save(fos);
@@ -54,13 +59,12 @@ public class MainMenu extends Activity implements OnClickListener {
 		if (v == findViewById(R.id.newgame_btn)){
 			finish();
 			Intent i = new Intent();
-			i.setClassName("jembalang.compfest.game", "jembalang.compfest.game.Jembalang");
+			i.setClassName("jembalang.compfest.game", "jembalang.compfest.game.LevelSelectAct");
 			startActivity(i);
 		}
 		if (v == findViewById(R.id.setting_btn)){
 			// TODO main menu setting button
 		}
 	}
-	
-	
+
 }
