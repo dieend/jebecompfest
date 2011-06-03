@@ -18,7 +18,7 @@ public class Weapon {
 	private int bullet;
 	private int base_damage;
 	private RectF area;
-	private int type;
+	int type;
 	private int buff;
 	private int delay;
 	private static int currentWeapon;
@@ -73,16 +73,14 @@ public class Weapon {
 	}
 	
 	
-	public static void init(GameThread h,int...weaponTypes) {
-		if (weaponList == null){
-			weaponList = new ArrayList<Weapon>(); 
-			currentWeapon = 0;
-			host = h;
-			for(int type: weaponTypes){
-				Weapon.Factory(type);
-			}
-			active = false;
+	public static void init(GameThread h,Integer...weaponTypes) {
+		weaponList = new ArrayList<Weapon>(); 
+		currentWeapon = 0;
+		host = h;
+		for(int type: weaponTypes){
+			Weapon.Factory(type);
 		}
+		active = false;
 	}
 	public static Weapon take(){
 		if (weaponList == null){

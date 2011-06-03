@@ -41,6 +41,7 @@ public class Jembalang extends Activity implements OnClickListener {
 		gameView = (GameThread) Jembalang.this.findViewById(R.id.game_view);
 		gameView.setFocusable(true);
 		gameView.setFocusableInTouchMode(true);
+		gameView.setHost(this);
 		gameView.start();
 		
 		dialog = new Dialog(this);
@@ -66,7 +67,12 @@ public class Jembalang extends Activity implements OnClickListener {
 		nextweapon_btn.setOnClickListener(this);
 		prevweapon_btn.setOnClickListener(this);
 	}
-
+	@Override
+	public void onResume(){
+		super.onResume();
+//		if (ImageCollection.is() != null)
+//			ImageCollection.is().reinit();
+	}
 	@Override
 	public void onClick(View view) {
 		if (view == dialog.findViewById(R.id.exit_btn)) {
@@ -85,6 +91,7 @@ public class Jembalang extends Activity implements OnClickListener {
 		}
 		if (view == dialog.findViewById(R.id.backtomainmenu_btn)) {
 			finish();
+			gameView = null;
 			Intent i = new Intent();
 			i.setClassName("jembalang.compfest.game","jembalang.compfest.game.MainMenu");
 			startActivity(i);
@@ -96,5 +103,13 @@ public class Jembalang extends Activity implements OnClickListener {
 			Weapon.nextWeapon();
 		}
 	}
-
+	public void endgame(int status, Integer[] medals){
+		if (status != GameThread.PAUSED){
+			if (status == GameThread.LOSE){
+				// TODO kalau menang nampilin apa
+			}else if (status == GameThread.WIN){
+				// TODO kalau kalah nampilin apa
+			}
+		}
+	}
 }

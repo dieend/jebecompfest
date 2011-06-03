@@ -1,6 +1,8 @@
 package jembalang.compfest.game;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -23,6 +25,20 @@ public class ImageCollection {
 	} 
 	public static ImageCollection is(){
 		return imageCollection;
+	}
+	public void reinit() {
+		for (Map.Entry<Integer, Bitmap[]> entry : WeaponExplosionImage.entrySet()){
+			WeaponExplosionLoader(entry.getKey());
+		}
+		for (Map.Entry<Integer, Bitmap[]> entry : BugImage.entrySet()){
+			BugImageLoader(entry.getKey());
+		}
+		for (Map.Entry<Integer, Bitmap[]> entry : BugDieImage.entrySet()){
+			BugDieImageLoader(entry.getKey());
+		}
+		for (Map.Entry<Integer, Bitmap[]> entry : WeaponImage.entrySet()){
+			WeaponImageLoader(entry.getKey());
+		}
 	}
 	public Bitmap[] getImage(int SOURCE_TYPE, int TYPE_OF_SOURCE){
 		Bitmap[] tmp = null;
@@ -147,7 +163,6 @@ public class ImageCollection {
 		for (int i=0; i<column*row; i++){
 			images[i] = Bitmap.createBitmap(tmp, (i%column)*width,(i/column)*height , width-1, height-1);
 		}
-//		tmp.recycle();
 		return images;
 	}
 }
