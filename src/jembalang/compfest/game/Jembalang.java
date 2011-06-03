@@ -14,10 +14,15 @@ import android.widget.Toast;
 public class Jembalang extends Activity implements OnClickListener {
 	private GameThread gameView;
 	private Dialog dialog;
-
+	private Button setting_btn;
+	private Button backtomainmenu_btn; 
+	private Button exit_btn;
+	private ImageView nextweapon_btn;
+	private ImageView prevweapon_btn;
+	private ImageView weapon_img;
 	/** Called when the activity is first created. */
 
-	
+	private Button resume_btn; 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		super.onKeyDown(keyCode, event);
@@ -38,27 +43,26 @@ public class Jembalang extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gameplay);
-		gameView = (GameThread) Jembalang.this.findViewById(R.id.game_view);
+		gameView = (GameThread) findViewById(R.id.game_view);
 		gameView.setFocusable(true);
 		gameView.setFocusableInTouchMode(true);
 		gameView.setHost(this);
-		gameView.start();
-		
+		gameView.ready();
 		dialog = new Dialog(this);
 		dialog.setContentView(R.layout.ingamemenu);
 		dialog.setTitle("Game Paused");
 		dialog.setCancelable(false);
 		
-		Button resume_btn = (Button) dialog.findViewById(R.id.resume_btn);
-		Button setting_btn = (Button) dialog
+		resume_btn = (Button) dialog.findViewById(R.id.resume_btn);
+		setting_btn = (Button) dialog
 				.findViewById(R.id.setting_btn);
-		Button backtomainmenu_btn = (Button) dialog
+		backtomainmenu_btn = (Button) dialog
 				.findViewById(R.id.backtomainmenu_btn);
-		Button exit_btn = (Button) dialog.findViewById(R.id.exit_btn);
-		ImageView nextweapon_btn = (ImageView) findViewById(R.id.img_larrow);
-		ImageView prevweapon_btn = (ImageView) findViewById(R.id.img_rarrow);
+		exit_btn = (Button) dialog.findViewById(R.id.exit_btn);
+		nextweapon_btn = (ImageView) findViewById(R.id.img_larrow);
+		prevweapon_btn = (ImageView) findViewById(R.id.img_rarrow);
 		// TODO implements weapon image change
-		ImageView weapon_img = (ImageView) findViewById(R.id.img_weapon);
+		weapon_img = (ImageView) findViewById(R.id.img_weapon);
 
 		resume_btn.setOnClickListener(this);
 		setting_btn.setOnClickListener(this);
@@ -66,6 +70,8 @@ public class Jembalang extends Activity implements OnClickListener {
 		exit_btn.setOnClickListener(this);
 		nextweapon_btn.setOnClickListener(this);
 		prevweapon_btn.setOnClickListener(this);
+		weapon_img.setOnClickListener(this);
+		gameView.start();
 	}
 	@Override
 	public void onResume(){
@@ -75,32 +81,38 @@ public class Jembalang extends Activity implements OnClickListener {
 	}
 	@Override
 	public void onClick(View view) {
-		if (view == dialog.findViewById(R.id.exit_btn)) {
+		if (view == exit_btn) {
 			finish();
 			System.exit(0);
 		}
-		if (view == dialog.findViewById(R.id.resume_btn)) {
+		if (view == resume_btn) {
 			dialog.cancel();
 			if (gameView != null) {
 				gameView.resume();
 			}
 		}
-		if (view == dialog.findViewById(R.id.setting_btn)) {
+		if (view == setting_btn) {
 			Toast.makeText(view.getContext(), "Setting Button clicked",
-					Toast.LENGTH_LONG).show();
+					Toast.LENGTH_SHORT).show();
 		}
-		if (view == dialog.findViewById(R.id.backtomainmenu_btn)) {
+		if (view == backtomainmenu_btn) {
 			finish();
 			gameView = null;
 			Intent i = new Intent();
 			i.setClassName("jembalang.compfest.game","jembalang.compfest.game.MainMenu");
 			startActivity(i);
 		}
-		if (view == findViewById(R.id.img_larrow)) {
+		if (view == prevweapon_btn) {
 			Weapon.prevWeapon();
+			weapon_img.setImageBitmap(Weapon.take().getImage());
 		}
-		if (view == findViewById(R.id.img_rarrow)) {
+		if (view == nextweapon_btn) {
 			Weapon.nextWeapon();
+			weapon_img.setImageBitmap(Weapon.take().getImage());
+			
+		}
+		if (view == weapon_img){
+			Weapon.take().reload();
 		}
 	}
 	public void endgame(int status, Integer[] medals){
@@ -111,5 +123,10 @@ public class Jembalang extends Activity implements OnClickListener {
 				// TODO kalau kalah nampilin apa
 			}
 		}
+	}
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		Weapon.destroy();
 	}
 }

@@ -14,7 +14,7 @@
 			android:layout_height="wrap_content" android:src="@drawable/larrow"
 			android:id="@+id/img_larrow" />
 		<ImageView android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:src="@drawable/ak47"
+			android:layout_width="wrap_content" android:src="@drawable/gun"
 			android:id="@+id/img_weapon" />
 		<ImageView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:src="@drawable/rarrow"

@@ -22,8 +22,12 @@ public class Player implements Serializable{
 	private static Player player;
 	private Player(){
 		scorePerLevel = new int[10];
+		coin = 200;
 		weapons = new Vector<Integer>();
 		weapons.add(Weapon.GUN);
+		weapons.add(Weapon.SLOWER);
+		weapons.add(Weapon.BURNER);
+		weapons.add(Weapon.RUDAL);
 	}
 	public static Player getInstance() {
 		return player;
@@ -80,8 +84,15 @@ public class Player implements Serializable{
 	public Vector<Integer> getWeaponVector(){
 		return weapons;
 	}
-	public int getCoin(){
+	public int getCoin() {
 		return coin;
+	}
+	public boolean buy(int c){
+		if (coin>=c){
+			coin-=c;
+			return true;
+		}
+		return false;
 	}
 	
 	//Setter
@@ -97,8 +108,8 @@ public class Player implements Serializable{
 		this.scorePerLevel = scorePerLevel;
 	}
 	
-	public void setCoin(int coin){
-		this.coin = coin;
+	public void addCoin(int c){
+		coin += c;
 	}
 	
 }

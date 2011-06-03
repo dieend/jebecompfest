@@ -3,6 +3,7 @@ package jembalang.compfest.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.util.Log;
@@ -25,12 +26,16 @@ public class Weapon {
 	private static List<Weapon> weaponList;
 	private int ttint;
 	private int tint;
+	private Bitmap image;
 	private static GameThread host;
+	int price;
+	int maxBullet;
 	public static boolean active; 
 	public static final int GUN = 0;
 	public static final int SLOWER = 1;
 	public static final int BURNER = 2;
 	public static final int RUDAL = 3;
+	public static final int RUDAL2 = 4;
 	public static final int BUFF_NO = 0;
 	public static final int BUFF_FREEZE = 1;
 	public static final int BUFF_PARALYZED= 2;
@@ -41,35 +46,41 @@ public class Weapon {
 			area = new RectF(0,0,20,20);
 			base_damage = 20;
 			buff = BUFF_NO;
-			bullet = -1;
+			maxBullet = 60;
 			ttint = 10;
 			tint = Color.RED;
 			delay = 0;
+			price = 0;
 		} else if (type == SLOWER) {
 			area = new RectF(0,0,40,40);
 			base_damage = 10;
 			buff = BUFF_FREEZE;
-			bullet = 10;
+			maxBullet = 10;
 			ttint = 100;
 			tint = Color.BLUE;
 			delay = 0;
+			price = 200;
 		} else if (type == BURNER){
 			area = new RectF(0,0,10,10);
 			base_damage = 50;
 			buff = BUFF_PARALYZED;
-			bullet = 10;
+			maxBullet = 10;
 			ttint = 20;
 			tint = Color.YELLOW;
 			delay = 10;
+			price = 400;
 		} else if (type == RUDAL){
 			area = new RectF(0,0,240,320);
 			base_damage = 100;
 			buff = BUFF_NO;
-			bullet = -1;
+			maxBullet = 2;
 			ttint = 10;
 			tint = Color.RED;
 			delay = 3000;
+			price = 500;
 		}
+		bullet = maxBullet;
+		this.image = ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON, type)[0];
 	}
 	
 	
@@ -123,9 +134,11 @@ public class Weapon {
 	}
 	public void setFire(int x, int y){
 		if (bullet>0) bullet -= 1;
-		x -= (area.width()/2);
-		y -= (area.height()/2);
-		area.offsetTo(x, y);
+		if (type != RUDAL){
+			x -= (area.width()/2);
+			y -= (area.height()/2);
+			area.offsetTo(x, y);
+		}
 		Explosion.makeExplosion(ImageCollection.is().getImage(ImageCollection.IMAGE_WEAPON_EXPLOSION, type), 
 				host.getLayerManager(), area);
 		active = true;
@@ -172,5 +185,12 @@ public class Weapon {
 	public int delay(){
 		return delay;
 	}
-	
+	public Bitmap getImage(){
+		return image;
+	}
+	public void reload() {
+		if (Player.getInstance().buy(price)){
+			bullet = maxBullet;
+		}
+	}
 }
