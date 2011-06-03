@@ -70,7 +70,7 @@ public class Bug extends Sprite {
 
 	public void setFunction(MovingFunction mf){
 		if (mf == null){
-			this.mf = new MovingFunction(this, 12,host.getViewWidth(),host.getViewHeight());
+			this.mf = new MovingFunction(this, MovingFunction.getEasy() ,host.getViewWidth(),host.getViewHeight());
 		} else {
 			this.mf = mf;
 		}

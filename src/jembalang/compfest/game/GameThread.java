@@ -1,16 +1,16 @@
 package jembalang.compfest.game;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,10 +20,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnKeyListener;
-import android.widget.Button;
 
 public class GameThread extends View implements Runnable, OnKeyListener {
-	private ArrayList<Bug> bug;
+	private Vector<Bug> bug;
+//	private Vector<Sprite> Coin;
 	private boolean active;
 	private int width;
 	private int height;
@@ -42,22 +42,33 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 	private int inscreen;
 	private Random rand;
 	private RectF fire;
-
+	private Rect lapis;
+	private Jembalang host;
+	public static int PAUSED = 0;
+	public static int WIN = 1;
+	public static int LOSE = 2;
+	
+	public void setHost(Jembalang host){
+		this.host = host;
+	}
 	public GameThread(Context context, AttributeSet attr) {
 		super(context, attr);
 		fire = new RectF();
 		paint = new Paint();
 		paint.setColor(Color.RED);
 		setOnKeyListener(this);
+		
 		// Calculate scale
 		inscreen = 0;
 		rand = new Random(System.currentTimeMillis());
-		bug = new ArrayList<Bug>();
+		bug = new Vector<Bug>();
 		WindowManager wm = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 		width = display.getWidth();
 		height = display.getHeight();
+		lapis = new Rect(0,height*90/100,width,height);
+		height = height*90/100;
 		bar_width = width / 4 - width / 10;
 		bar_left = width - bar_width - width / 24;
 		bar_top = height / 80;
@@ -75,7 +86,7 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 		// Calculate scale
 		inscreen = 0;
 		rand = new Random(System.currentTimeMillis());
-		bug = new ArrayList<Bug>();
+		bug = new Vector<Bug>();
 		WindowManager wm = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
@@ -97,7 +108,7 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 		gameScore = 0;
 		gameHit = 0;
 		gameShot = 0;
-		Weapon.init(this, Weapon.RUDAL, Weapon.GUN, Weapon.SLOWER);
+		Weapon.init(this, Player.getInstance().getWeapons());
 		time = 0;
 		((Thread) new Thread(this)).start();
 
@@ -130,9 +141,11 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 		paint.setColor(Color.RED);
 		canvas.drawRect(bar_left, bar_top, bar_right, bar_bottom, paint);
 		paint.setColor(Color.GREEN);
-		canvas.drawRect(bar_left, bar_top, bar_left
+		if (player_HP > 0) canvas.drawRect(bar_left, bar_top, bar_left
 				+ (player_HP * bar_width / 100), bar_bottom, paint);
 		layerManager.draw(canvas);
+		paint.setColor(Color.GRAY);
+		canvas.drawRect(lapis, paint);
 		// canvas.drawRect(fire, paint);
 	}
 
@@ -146,36 +159,55 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 			updatePhysics();
 			postInvalidate();
 		}
+		int status;
+		if (player_HP<=0){
+			host.endgame(LOSE,null);
+		}else if (bug.size() <=0 ){
+			Vector<Integer> medals = new Vector<Integer>();
+			Integer[] k = new Integer[medals.size()];
+			//TODO jika dapat medal, masukin ke medals;
+			host.endgame(WIN, medals.toArray(k));
+		}
+		
 	}
-
+	
 	public void updatePhysics() {
 		time += 1;
+		if (player_HP <= 0 || bug.size() <= 0) {
+			active = false;
+			return;
+		}
 		if (inscreen == 0) {
 			inscreen = rand.nextInt(Math.min(bug.size(), 4));
 		}
-		for (int i = 0; i < inscreen; i++) {
-			if (i < bug.size() && bug.get(i) != null) {
-				Bug b = bug.get(i);
-				if (!b.visible) {
-					b.visible = true;
-					layerManager.append(b);
-				}
-				b.update(time);
-				if (!b.isAlive()) {
-					Explosion.makeExplosion(ImageCollection.is().getImage(
-							ImageCollection.IMAGE_BUG_DIE, b.getType()),
-							layerManager, b.getRectangle(), 12);
-					bug.remove(i);
-					b.die();
-					b = null;
-					inscreen--;
-				} else {
-					if (b.getY() > getViewHeight()) {
-						player_HP -= b.damage();
-						bug.remove(i);
+		Iterator<Bug> it = bug.iterator();
+		Log.d(MainMenu.APPNAME, "Bug size"+bug.size());
+		synchronized (bug) {
+			for (int i = 0; i < inscreen; i++) {
+				if (it.hasNext()) {
+					Log.d(MainMenu.APPNAME, "Bug number"+i);
+					Bug b = it.next(); 
+					if (!b.visible) {
+						b.visible = true;
+						layerManager.append(b);
+					}
+					b.update(time);
+					if (!b.isAlive()) {
+						Explosion.makeExplosion(ImageCollection.is().getImage(
+								ImageCollection.IMAGE_BUG_DIE, b.getType()),
+								layerManager, b.getRectangle(), 12);
+						it.remove();
 						b.die();
 						b = null;
 						inscreen--;
+					} else {
+						if (b.getY() > getViewHeight()) {
+							player_HP -= b.damage();
+							it.remove();
+							b.die();
+							b = null;
+							inscreen--;
+						}
 					}
 				}
 			}
@@ -189,15 +221,37 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 				return true;
 			Weapon.take().setFire(event.getRawX(), event.getRawY());
 			// fire = Weapon.take().getArea();
-			Timer t = new Timer();
-			t.schedule(new TimerTask() {
-
-				@Override
-				public void run() {
-					gameShot += 1;
-					Weapon.active = false;
-					boolean[] hit = new boolean[1];
-					for (Bug b : bug) {
+			if (Weapon.take().type == Weapon.RUDAL){
+				Timer t = new Timer();
+				t.schedule(new TimerTask() {
+	
+					@Override
+					public void run() {
+						gameShot += 1;
+						Weapon.active = false;
+						boolean[] hit = new boolean[1];
+						Iterator<Bug> it = bug.iterator();
+						synchronized(bug){
+							while (it.hasNext()){
+								Bug b = it.next();
+								if (b != null && b.visible) {
+									gameScore += b.hit(Weapon.take(), hit);
+									if (hit[0]) {
+										gameHit += 1;
+									}
+								}
+							}
+						}
+					}
+				}, Weapon.take().delay());
+			} else {
+				gameShot += 1;
+				Weapon.active = false;
+				boolean[] hit = new boolean[1];
+				Iterator<Bug> it = bug.iterator();
+				synchronized (bug) {	
+					while (it.hasNext()){
+						Bug b = it.next();
 						if (b != null && b.visible) {
 							gameScore += b.hit(Weapon.take(), hit);
 							if (hit[0]) {
@@ -206,7 +260,9 @@ public class GameThread extends View implements Runnable, OnKeyListener {
 						}
 					}
 				}
-			}, Weapon.take().delay());
+			}
+		}else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			
 		}
 		return true;
 	}
