@@ -2,7 +2,6 @@ package jembalang.compfest.game;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.LinearLayout;
  
@@ -30,8 +29,7 @@ public class SplashScreen extends Activity {
             } finally {
                finish();
                Intent i = new Intent();
-               i.setClassName("jembalang.compfest.game",
-                              "jembalang.compfest.game.MainMenu");
+               i.setClassName("jembalang.compfest.game","jembalang.compfest.game.MainMenu");
                startActivity(i);
             }
          }

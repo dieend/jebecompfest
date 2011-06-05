@@ -8,17 +8,18 @@
 		android:layout_height="fill_parent">
 	</jembalang.compfest.game.GameThread>
 
-	<TableRow android:layout_width="fill_parent"
+	<TableLayout android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:gravity="bottom|center_horizontal">
-		<ImageView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:src="@drawable/larrow"
-			android:id="@+id/img_larrow" />
-		<ImageView android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:src="@drawable/gun"
-			android:id="@+id/img_weapon" />
-		<ImageView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:src="@drawable/rarrow"
-			android:id="@+id/img_rarrow" />
-	</TableRow>
-
+		<TableRow android:gravity="bottom|center_horizontal">
+			<ImageView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:src="@drawable/larrow"
+				android:id="@+id/img_larrow" />
+			<ImageView android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:src="@drawable/gun"
+				android:id="@+id/img_weapon" />
+			<ImageView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:src="@drawable/rarrow"
+				android:id="@+id/img_rarrow" />
+		</TableRow>
+	</TableLayout>
 </merge>

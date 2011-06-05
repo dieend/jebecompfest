@@ -28,8 +28,6 @@ public class LevelSelectAct extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.levelselect);
-
-		//SoundManager.playSound(3, 1);
 		
 		Button play_btn = (Button) findViewById(R.id.play_btn);
 		play_btn.setOnClickListener(this);
@@ -45,9 +43,5 @@ public class LevelSelectAct extends Activity implements OnClickListener {
 			startActivity(i);
 		}
 	}
-	
-	public void onDestroy(){
-		SoundManager.cleanup();
-	}
-	
+		
 }
