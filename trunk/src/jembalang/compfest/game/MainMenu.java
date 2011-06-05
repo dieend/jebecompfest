@@ -25,9 +25,6 @@ public class MainMenu extends Activity implements OnClickListener {
 //		} catch (FileNotFoundException ex){
 //			Player.init();
 //		}
-		SoundManager.getInstance();
-        SoundManager.initSounds(this);
-        SoundManager.loadSounds();
 		
 		Button newgame_btn = (Button)findViewById(R.id.newgame_btn);
 		Button setting_btn = (Button)findViewById(R.id.setting_btn);
@@ -45,7 +42,6 @@ public class MainMenu extends Activity implements OnClickListener {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		SoundManager.cleanup();
 		try {
 			FileOutputStream fos = openFileOutput(APPNAME, MODE_PRIVATE);
 			Player.save(fos);
