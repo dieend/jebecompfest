@@ -82,6 +82,17 @@ public class MovingFunction {
 		}
 	}
 	
+	
+//	public static final int STAY = 0;//x1,y1,boolstay,timestay
+//	public static final int LINE = 1;//x1,y1,x2,y2,speed
+//	public static final int ZIGZAG = 2;//x1,y1,a,b,speed
+//	public static final int ARC = 3;//x1,y1,x2,y2,o1,o2,t1,dir(1/-1),speed,reflexive
+//	public static final int FASTARC = 4;//x1,y1,x0,y0,xspeed,yspeed,time
+//	public static final int SHUNPO = 5;//x1,y1,x2,y2,changesizespeed
+//	public static final int BOSSMOVESTRIKE1 = 6;
+//	public static final int BOSSMOVESTRIKE2 = 7;
+//	public static final int BOSSMOVESTRIKE3 = 8;
+
 	//is[0]=status,is[1]=length param,is[2]=start param
 	public MovingFunction(Bug bug,int moved,int viewWidth,int viewHeight){
 		this.bug=bug;
@@ -95,7 +106,7 @@ public class MovingFunction {
 		for(int i=0;i<xcount.length;++i){
 			xcount[i]=0;
 		}
-		if (moved%bound==0){//STRIKE-1
+		if (moved%bound==0){//STRIKE-0
 			bug.setPosition(30, 30);
 			is[0]=0;
 			is[1]=1;
@@ -103,19 +114,19 @@ public class MovingFunction {
 			is[3]=bug.getX();
 			is[4]=bug.getY();
 			is[5]=bug.getX();
-			is[6]=viewHeight+30;
+			is[6]=viewHeight+15;
 			
 			//speed
 			if (moved==0){
-				is[7]=3;//speed
+				is[7]=2;//speed
 			}else if (moved==0+bound){
-				is[7]=5;
+				is[7]=3;
 			}else if (moved==0+2*bound){
-				is[7]=7;
+				is[7]=4;
 			}
 			length=8;
 			
-		}else if (moved%bound==1){//STRIKE-2
+		}else if (moved%bound==1){//STRIKE-1
 			bug.setPosition(viewWidth/2-15, 30);
 			is[0]=0;
 			is[1]=1;
@@ -127,15 +138,15 @@ public class MovingFunction {
 			
 			//speed
 			if (moved==1){
-				is[7]=3;//speed
+				is[7]=2;//speed
 			}else if (moved==1+bound){
-				is[7]=5;
+				is[7]=3;
 			}else if (moved==1+2*bound){
-				is[7]=7;
+				is[7]=4;
 			}
 			length=8;
 			
-		}else if (moved%bound==2){//STRIKE-3
+		}else if (moved%bound==2){//STRIKE-2
 			bug.setPosition(viewWidth-30, 30);
 			is[0]=0;
 			is[1]=1;
@@ -147,22 +158,22 @@ public class MovingFunction {
 			
 			//speed
 			if (moved==2){
-				is[7]=3;//speed
+				is[7]=2;//speed
 			}else if (moved==2+bound){
-				is[7]=5;
+				is[7]=3;
 			}else if (moved==2+2*bound){
-				is[7]=7;
+				is[7]=4;
 			}
 			length=8;
 			
-		}else if (moved%bound==3){//STRIKE-4
+		}else if (moved%bound==3){//STRIKE-3
 			int speedmoved3=1;
 			if (moved==3){
-				speedmoved3=2;
+				speedmoved3=1;
 			}else if (moved==3+bound){
-				speedmoved3=4;
+				speedmoved3=2;
 			}else if (moved==3+2*bound){
-				speedmoved3=6;
+				speedmoved3=3;
 			}
 			int tempheight=viewHeight/4;
 			
@@ -206,14 +217,14 @@ public class MovingFunction {
 			length=26;
 			
 			
-		}else if (moved%bound==4){//STRIKE-5
+		}else if (moved%bound==4){//STRIKE-4
 			int speedmoved3=1;
 			if (moved==4){
-				speedmoved3=2;
+				speedmoved3=1;
 			}else if (moved==4+bound){
-				speedmoved3=4;
+				speedmoved3=2;
 			}else if (moved==4+2*bound){
-				speedmoved3=6;
+				speedmoved3=3;
 			}
 			int tempheight=viewHeight/4;
 			
@@ -259,11 +270,11 @@ public class MovingFunction {
 		}else if (moved%bound==5){//STRIKE-5
 			int speedmoved3=1;
 			if (moved==5){
-				speedmoved3=2;
+				speedmoved3=3;
 			}else if (moved==5+bound){
-				speedmoved3=4;
+				speedmoved3=5;
 			}else if (moved==5+2*bound){
-				speedmoved3=6;
+				speedmoved3=7;
 			}
 			
 			
@@ -324,11 +335,11 @@ public class MovingFunction {
 		}else if (moved%bound==6){//STRIKE-6
 			int speedmoved3=1;
 			if (moved==6){
-				speedmoved3=2;
+				speedmoved3=3;
 			}else if (moved==6+bound){
-				speedmoved3=4;
+				speedmoved3=5;
 			}else if (moved==6+2*bound){
-				speedmoved3=6;
+				speedmoved3=7;
 			}
 			
 			bug.setPosition(3*viewWidth/4,30);
@@ -649,7 +660,7 @@ public class MovingFunction {
 			is[15]=bug.getX();
 			is[16]=bug.getY();
 			is[17]=0;
-			is[18]=50;	
+			is[18]=100;	
 				
 			is[19]=MovingFunction.LINE;
 			is[20]=bug.getX();
@@ -691,7 +702,7 @@ public class MovingFunction {
 			is[15]=bug.getX();
 			is[16]=bug.getY();
 			is[17]=0;
-			is[18]=50;	
+			is[18]=100;	
 				
 			is[19]=MovingFunction.LINE;
 			is[20]=bug.getX();
@@ -825,9 +836,9 @@ public class MovingFunction {
 				}
 				
 				if (bug.isBuff()){
-					tempspeed=(float)0.2;
+					tempspeed=(float)0.1;
 				}else{
-					tempspeed=1;
+					tempspeed=(float)0.3;
 				}
 				
 				if (x1lessx2){
@@ -1009,9 +1020,9 @@ public class MovingFunction {
 				}
 				
 				if (bug.isBuff()){
-					tempspeed=(float)0.2;
+					tempspeed=(float)0.1;
 				}else{
-					tempspeed=1;
+					tempspeed=(float)0.3;
 				}
 				
 				if (y1lessy2){
